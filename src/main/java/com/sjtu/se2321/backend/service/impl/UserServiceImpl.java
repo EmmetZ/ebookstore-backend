@@ -11,9 +11,6 @@ import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.entity.UserAuth;
 import com.sjtu.se2321.backend.service.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -54,9 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDTO> getMe(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Integer userId = (Integer) session.getAttribute("userId");
+    public Optional<UserDTO> getMe(Integer userId) {
         if (userId != null) {
             Optional<User> userOpt = userDAO.getUserById(userId);
             if (userOpt.isPresent()) {

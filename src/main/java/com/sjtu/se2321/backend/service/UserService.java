@@ -5,8 +5,6 @@ import java.util.Optional;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.User;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 public interface UserService {
 
     /**
@@ -24,5 +22,5 @@ public interface UserService {
     public Optional<User> getUserById(Integer userId);
 
     // 获取当前登录的信息
-    public Optional<UserDTO> getMe(HttpServletRequest request);
+    public Optional<UserDTO> getMe(Integer userId);
 }
