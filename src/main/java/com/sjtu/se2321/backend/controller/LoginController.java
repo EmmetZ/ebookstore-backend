@@ -24,7 +24,7 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<Result<Void>> login(@RequestBody LoginBody body, HttpServletResponse response,
             HttpSession session) {
         System.out.println("Login attempt: " + body);
@@ -42,7 +42,7 @@ public class LoginController {
         session.setAttribute("userId", user.getId());
 
         // 创建一个cookie，保存会话ID
-        Cookie sessionCookie = new Cookie("SESSIONID", session.getId());
+        Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
         sessionCookie.setMaxAge(3600); // 1 hour
         sessionCookie.setPath("/");
         sessionCookie.setHttpOnly(true);

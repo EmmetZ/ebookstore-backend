@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 public class LogoutController {
 
-    @PutMapping("/logout")
+    @PutMapping("/api/logout")
     public ResponseEntity<Result<Void>> logout(HttpSession session) {
         // 清除会话
         session.invalidate();
