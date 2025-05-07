@@ -12,19 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookReqParam;
 import com.sjtu.se2321.backend.dto.ListResult;
-import com.sjtu.se2321.backend.entity.Book;
-import com.sjtu.se2321.backend.entity.Tag;
 import com.sjtu.se2321.backend.service.BookService;
-import com.sjtu.se2321.backend.service.TagService;
 
 @RestController
 public class BookController {
 
     @Autowired
     private BookService bookService;
-
-    @Autowired
-    private TagService tagService;
 
     @GetMapping("/api/books")
     public ResponseEntity<ListResult<BookDTO>> searchBooks(BookReqParam reqParam) {
@@ -36,33 +30,23 @@ public class BookController {
         if (index == null || size == null || index < 0 || size <= 0) {
             return ResponseEntity.badRequest().build();
         }
-        System.out.println(reqParam);
-        int tagId = -1;
-        if (!tag.isEmpty()) {
-            Optional<Tag> tagOpt = tagService.getTagByName(tag);
-            if (tagOpt.isPresent()) {
-                tagId = tagOpt.get().getId();
-            } else {
-                tagId = 0;
-            }
-        }
-        List<BookDTO> books = bookService.searchBooks(size, index * size, tagId, keyword);
+        List<BookDTO> books = bookService.searchBooks(size, index * size, tag, keyword);
         int total = bookService.getTotal(reqParam.getPageSize());
         return ResponseEntity.ok(new ListResult<>(total, books));
     }
 
     @GetMapping("/api/book/tags")
     public ResponseEntity<List<String>> getAllTags() {
-        return ResponseEntity.ok(tagService.getAllTags());
+        return ResponseEntity.ok(bookService.getAllTags());
     }
 
     @GetMapping("/api/book/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Integer id) {
-        Optional<Book> book = bookService.getBookById(id);
-        if (book.isEmpty()) {
+    public ResponseEntity<BookDTO> getBookById(@PathVariable Integer id) {
+        Optional<BookDTO> bookOpt = bookService.getBookById(id);
+        if (bookOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(book.get());
+        return ResponseEntity.ok(bookOpt.get());
     }
 
 }

@@ -24,10 +24,16 @@ public class BookServiceImpl implements BookService {
     private TagDAO tagDAO;
 
     @Override
-    public List<BookDTO> searchBooks(int limit, int offset, int tagId, String keyword) {
-        // if (keyword == null || keyword.isEmpty()) {
-        // keyword = "";
-        // }
+    public List<BookDTO> searchBooks(int limit, int offset, String tag, String keyword) {
+        int tagId = -1;
+        if (!tag.isEmpty()) {
+            Optional<Tag> tagOpt = tagDAO.getTagByName(tag);
+            if (tagOpt.isPresent()) {
+                tagId = tagOpt.get().getId();
+            } else {
+                tagId = 0;
+            }
+        }
         List<Book> books = bookDAO.searchBooks(limit, offset, tagId, keyword);
         List<BookDTO> bookDTOs = new ArrayList<>();
         for (Book book : books) {
@@ -38,8 +44,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> getBookById(Integer id) {
-        return bookDAO.getBookById(id);
+    public Optional<BookDTO> getBookById(Integer id) {
+        Optional<Book> bookOpt = bookDAO.getBookById(id);
+        if (bookOpt.isPresent()) {
+            Book book = bookOpt.get();
+            List<Tag> tags = tagDAO.getTagByBookId(book.getId()).orElse(new ArrayList<>());
+            return Optional.of(BookDTO.fromBook(book, tags));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -51,5 +63,17 @@ public class BookServiceImpl implements BookService {
     public int getTotal(int pageSize) {
         int total = bookDAO.countSearchResult(0, "");
         return (int) Math.ceil((double) total / pageSize);
+    }
+
+    @Override
+    public List<String> getAllTags() {
+        return tagDAO.getAllTags().stream()
+                .map(tag -> tag.getName())
+                .toList();
+    }
+
+    @Override
+    public Optional<Tag> getTagByName(String name) {
+        return tagDAO.getTagByName(name);
     }
 }
