@@ -38,17 +38,96 @@ public class BookRepository {
         return jdbcTemplate.query("SELECT * FROM Book", rowMapper);
     }
 
-    public Integer count() {
+    private Integer count() {
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Book", Integer.class);
-    }
-
-    public List<Book> findWithLimit(int limit, int offset) {
-        return jdbcTemplate.query("SELECT * FROM Book WHERE id > ? ORDER BY id ASC LIMIT ?", rowMapper,
-                offset, limit);
     }
 
     public Optional<Book> findById(Integer id) {
         List<Book> books = jdbcTemplate.query("SELECT * FROM Book WHERE id = ?", rowMapper, id);
         return books.isEmpty() ? Optional.empty() : Optional.of(books.get(0));
+    }
+
+    public List<Book> searchBooks(int limit, int offset, int tagId, String keyword) {
+        StringBuilder sqlBuilder = new StringBuilder("SELECT DISTINCT b.* FROM Book b ");
+
+        int paramCount = 2;
+        if (tagId != -1) {
+            paramCount++;
+        }
+        if (keyword != null && !keyword.isEmpty()) {
+            paramCount += 2;
+        }
+        Object[] params = new Object[paramCount];
+        int index = 0;
+
+        // 如果有标签过滤，添加 JOIN 条件
+        if (tagId != -1) {
+            sqlBuilder.append("JOIN BookTag bt ON b.id = bt.book_id ");
+        }
+
+        sqlBuilder.append("WHERE 1=1 ");
+
+        // 添加tagId过滤条件
+        if (tagId != -1) {
+            sqlBuilder.append("AND bt.tag_id = ? ");
+            params[index++] = tagId;
+        }
+
+        // 添加关键词搜索条件
+        if (keyword != null && !keyword.isEmpty()) {
+            sqlBuilder.append("AND (b.title LIKE ? OR b.author LIKE ? ) ");
+            String searchPattern = "%" + keyword + "%";
+            params[index++] = searchPattern;
+            params[index++] = searchPattern;
+        }
+
+        // 添加排序和分页
+        sqlBuilder.append("ORDER BY b.id ASC LIMIT ? OFFSET ?");
+        params[index++] = limit;
+        params[index++] = offset;
+
+        String sql = sqlBuilder.toString();
+        return jdbcTemplate.query(sql, rowMapper, params);
+    }
+
+    public Integer countSearchResult(int tagId, String keyword) {
+        StringBuilder sqlBuilder = new StringBuilder("SELECT COUNT(DISTINCT b.id) FROM Book b ");
+
+        int paramCount = 0;
+        if (tagId != -1) {
+            paramCount++;
+        }
+        if (keyword != null && !keyword.isEmpty()) {
+            paramCount += 2;
+        }
+        Object[] params = new Object[paramCount];
+        int index = 0;
+
+        // 如果有标签过滤，添加 JOIN 条件
+        if (tagId != -1) {
+            sqlBuilder.append("JOIN BookTag bt ON b.id = bt.book_id ");
+        }
+
+        sqlBuilder.append("WHERE 1=1 ");
+
+        // 添加tagId过滤条件
+        if (tagId != -1) {
+            sqlBuilder.append("AND bt.tag_id = ? ");
+            params[index++] = tagId;
+        }
+
+        // 添加关键词搜索条件
+        if (keyword != null && !keyword.isEmpty()) {
+            sqlBuilder.append("AND (b.title LIKE ? OR b.author LIKE ? ) ");
+            String searchPattern = "%" + keyword + "%";
+            params[index++] = searchPattern;
+            params[index++] = searchPattern;
+        }
+
+        if (paramCount == 0) {
+            return count();
+        }
+        String sql = sqlBuilder.toString();
+        return jdbcTemplate.queryForObject(sql, Integer.class, params);
     }
 }

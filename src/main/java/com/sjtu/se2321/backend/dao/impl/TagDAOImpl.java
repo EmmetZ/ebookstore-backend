@@ -30,4 +30,9 @@ public class TagDAOImpl implements TagDAO {
     public Optional<List<Tag>> getTagByBookId(Integer bookId) {
         return tagRepository.findByBookId(bookId);
     }
+
+    @Override
+    public Optional<Tag> getTagByName(String name) {
+        return tagRepository.findByName(name);
+    }
 }

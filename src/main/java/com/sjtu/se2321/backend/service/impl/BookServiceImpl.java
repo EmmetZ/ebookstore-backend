@@ -24,13 +24,11 @@ public class BookServiceImpl implements BookService {
     private TagDAO tagDAO;
 
     @Override
-    public List<BookDTO> searchBooks(int pageIndex, int pageSize) {
-        int limit = pageSize;
-        int offset = pageIndex * pageSize;
-        List<Book> books = bookDAO.getBooks(limit, offset);
-        if (books == null) {
-            return new ArrayList<>();
-        }
+    public List<BookDTO> searchBooks(int limit, int offset, int tagId, String keyword) {
+        // if (keyword == null || keyword.isEmpty()) {
+        // keyword = "";
+        // }
+        List<Book> books = bookDAO.searchBooks(limit, offset, tagId, keyword);
         List<BookDTO> bookDTOs = new ArrayList<>();
         for (Book book : books) {
             List<Tag> tags = tagDAO.getTagByBookId(book.getId()).orElse(new ArrayList<>());
@@ -44,16 +42,14 @@ public class BookServiceImpl implements BookService {
         return bookDAO.getBookById(id);
     }
 
-    public Integer getBookCount() {
-        return bookDAO.getBookCount();
+    @Override
+    public Integer countSearchResult(int tagId, String keyword) {
+        return bookDAO.countSearchResult(tagId, keyword);
     }
 
     @Override
-    public int getTotal(int limit) {
-        Integer total = bookDAO.getBookCount();
-        if (total == null) {
-            return 0;
-        }
-        return (int) Math.ceil((double) total / limit);
+    public int getTotal(int pageSize) {
+        int total = bookDAO.countSearchResult(0, "");
+        return (int) Math.ceil((double) total / pageSize);
     }
 }

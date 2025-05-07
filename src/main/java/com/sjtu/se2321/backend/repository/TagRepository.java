@@ -45,4 +45,9 @@ public class TagRepository {
         List<Tag> tags = jdbcTemplate.query("SELECT * FROM Tag WHERE id = ?", rowMapper, id);
         return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
     }
+
+    public Optional<Tag> findByName(String name) {
+        List<Tag> tags = jdbcTemplate.query("SELECT * FROM Tag WHERE name = ?", rowMapper, name);
+        return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
+    }
 }

@@ -27,4 +27,9 @@ public class TagServiceImpl implements TagService {
     public Optional<Tag> getTagById(Integer id) {
         return tagDAO.getTagById(id);
     }
+
+    @Override
+    public Optional<Tag> getTagByName(String name) {
+        return tagDAO.getTagByName(name);
+    }
 }

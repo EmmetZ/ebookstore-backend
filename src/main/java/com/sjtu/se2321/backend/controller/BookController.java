@@ -13,6 +13,7 @@ import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookReqParam;
 import com.sjtu.se2321.backend.dto.ListResult;
 import com.sjtu.se2321.backend.entity.Book;
+import com.sjtu.se2321.backend.entity.Tag;
 import com.sjtu.se2321.backend.service.BookService;
 import com.sjtu.se2321.backend.service.TagService;
 
@@ -27,17 +28,26 @@ public class BookController {
 
     @GetMapping("/api/books")
     public ResponseEntity<ListResult<BookDTO>> searchBooks(BookReqParam reqParam) {
-        if (reqParam.getPageIndex() == null ||
-                reqParam.getPageSize() == null ||
-                reqParam.getPageIndex() < 0 ||
-                reqParam.getPageSize() <= 0) {
+        Integer size = reqParam.getPageSize();
+        Integer index = reqParam.getPageIndex();
+        String keyword = reqParam.getKeyword().trim();
+        String tag = reqParam.getTag().trim();
+
+        if (index == null || size == null || index < 0 || size <= 0) {
             return ResponseEntity.badRequest().build();
         }
         System.out.println(reqParam);
-        int pageSize = reqParam.getPageSize();
-        int pageIndex = reqParam.getPageIndex();
-        List<BookDTO> books = bookService.searchBooks(pageSize, pageIndex);
-        int total = bookService.getTotal(pageSize);
+        int tagId = -1;
+        if (!tag.isEmpty()) {
+            Optional<Tag> tagOpt = tagService.getTagByName(tag);
+            if (tagOpt.isPresent()) {
+                tagId = tagOpt.get().getId();
+            } else {
+                tagId = 0;
+            }
+        }
+        List<BookDTO> books = bookService.searchBooks(size, index * size, tagId, keyword);
+        int total = bookService.getTotal(reqParam.getPageSize());
         return ResponseEntity.ok(new ListResult<>(total, books));
     }
 

@@ -11,4 +11,6 @@ public interface TagService {
 
     public Optional<Tag> getTagById(Integer id);
 
+    public Optional<Tag> getTagByName(String name);
+
 }

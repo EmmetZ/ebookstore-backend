@@ -13,4 +13,6 @@ public interface TagDAO {
 
     public Optional<List<Tag>> getTagByBookId(Integer bookId);
 
+    public Optional<Tag> getTagByName(String name);
+
 }
