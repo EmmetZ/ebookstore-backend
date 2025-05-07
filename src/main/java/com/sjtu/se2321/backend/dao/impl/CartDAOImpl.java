@@ -20,4 +20,8 @@ public class CartDAOImpl implements CartDAO {
         return cartRepository.findAllByUserId(userId);
     }
 
+    @Override
+    public boolean updateCartItem(Integer id, Integer number) {
+        return cartRepository.updateCartItem(id, number); 
+    }
 }

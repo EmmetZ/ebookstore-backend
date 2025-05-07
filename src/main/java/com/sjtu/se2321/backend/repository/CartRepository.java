@@ -34,4 +34,8 @@ public class CartRepository {
         return jdbcTemplate.query("SELECT * FROM CartItem WHERE user_id = ? ", rowMapper, userId);
     }
 
+    public boolean updateCartItem(Integer id, Integer number) {
+        int rowsAffected = jdbcTemplate.update("UPDATE CartItem SET number = ? WHERE id = ?", number, id);
+        return rowsAffected > 0;
+    }
 }

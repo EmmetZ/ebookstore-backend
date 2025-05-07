@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.CartDAO;
@@ -37,4 +38,9 @@ public class CartServiceImpl implements CartService {
         return cart;
     }
 
+    @Override
+    @Transactional
+    public boolean updateCartItem(Integer id, Integer number) {
+        return cartDAO.updateCartItem(id, number);
+    }
 }
