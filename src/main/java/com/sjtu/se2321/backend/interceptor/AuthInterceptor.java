@@ -21,7 +21,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         // 检查会话是否存在以及是否包含userId
         if (session == null || session.getAttribute("userId") == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: Please login first");
+            // response.getWriter().write("Unauthorized: Please login first");
             return false;
         }
 
