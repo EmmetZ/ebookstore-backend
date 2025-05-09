@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.TagDAO;
 import com.sjtu.se2321.backend.dto.BookDTO;
-import com.sjtu.se2321.backend.dto.ListResult;
+import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.entity.Tag;
 import com.sjtu.se2321.backend.service.BookService;
@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService {
     private TagDAO tagDAO;
 
     @Override
-    public ListResult<BookDTO> searchBooks(int limit, int offset, String tag, String keyword) {
+    public PageResult<BookDTO> searchBooks(int limit, int offset, String tag, String keyword) {
         // tag:
         // tagId = -1 : tag is null, search all books
         // tagId = 0 : tag is not found in db
@@ -46,7 +46,7 @@ public class BookServiceImpl implements BookService {
             bookDTOs.add(BookDTO.fromBook(book, tags));
         }
         int total = getTotal(tagId, keyword, limit);
-        return new ListResult<BookDTO>(total, bookDTOs);
+        return new PageResult<BookDTO>(total, bookDTOs);
     }
 
     @Override

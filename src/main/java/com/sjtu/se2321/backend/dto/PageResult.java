@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ListResult<T> {
+public class PageResult<T> {
     private Integer total;
     private List<T> items;
 }

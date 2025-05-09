@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookReqParam;
-import com.sjtu.se2321.backend.dto.ListResult;
+import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.service.BookService;
 
 @RestController
@@ -21,7 +21,7 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/api/books")
-    public ResponseEntity<ListResult<BookDTO>> searchBooks(BookReqParam reqParam) {
+    public ResponseEntity<PageResult<BookDTO>> searchBooks(BookReqParam reqParam) {
         Integer size = reqParam.getPageSize();
         Integer index = reqParam.getPageIndex();
         String keyword = reqParam.getKeyword().trim();
