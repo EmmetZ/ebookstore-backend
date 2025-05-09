@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CartItemDTO {
-    private Integer id;
+    private Long id;
     private Book book;
     private Integer number;
 }

@@ -17,17 +17,17 @@ public class BookDAOImpl implements BookDAO {
     private BookRepository bookRepository;
 
     @Override
-    public List<Book> searchBooks(int limit, int offset, int tagId, String keyword) {
+    public List<Book> searchBooks(int limit, int offset, Long tagId, String keyword) {
         return bookRepository.searchBooks(limit, offset, tagId, keyword);
     }
 
     @Override
-    public Integer countSearchResult(int tagId, String keyword) {
+    public Integer countSearchResult(Long tagId, String keyword) {
         return bookRepository.countSearchResult(tagId, keyword);
     }
 
     @Override
-    public Optional<Book> getBookById(Integer id) {
+    public Optional<Book> getBookById(Long id) {
         return bookRepository.findById(id);
     }
 }

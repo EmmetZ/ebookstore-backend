@@ -23,7 +23,7 @@ public class UserRepository {
         @Override
         public User mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
-            user.setId(rs.getInt("id"));
+            user.setId(rs.getLong("id"));
             user.setUsername(rs.getString("username"));
             user.setNickname(rs.getString("nickname"));
             user.setBalance(rs.getString("balance"));
@@ -37,7 +37,7 @@ public class UserRepository {
         return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
 
-    public Optional<User> findById(Integer id) {
+    public Optional<User> findById(Long id) {
         List<User> users = jdbcTemplate.query("SELECT * FROM User WHERE id = ?", rowMapper, id);
         return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }

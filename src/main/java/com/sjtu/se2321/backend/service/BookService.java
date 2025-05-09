@@ -9,9 +9,9 @@ import com.sjtu.se2321.backend.entity.Tag;
 public interface BookService {
     public List<BookDTO> searchBooks(int limit, int offset, String tag, String keyword);
 
-    public Optional<BookDTO> getBookById(Integer id);
+    public Optional<BookDTO> getBookById(Long id);
 
-    public Integer countSearchResult(int tagId, String keyword);
+    public Integer countSearchResult(Long tagId, String keyword);
 
     public int getTotal(int pageSize);
 

@@ -26,12 +26,12 @@ public class CartController {
     @GetMapping("/api/cart")
     public ResponseEntity<List<CartItemDTO>> getCartItemsByUserId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        Integer userId = (Integer) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute("userId");
         return ResponseEntity.ok(cartService.getCartItemsByUserId(userId));
     }
 
     @PutMapping("/api/cart/{id}")
-    public ResponseEntity<Result<Void>> updateCartItem(@PathVariable Integer id, @RequestParam Integer number) {
+    public ResponseEntity<Result<Void>> updateCartItem(@PathVariable Long id, @RequestParam Integer number) {
         if (cartService.updateCartItem(id, number)) {
             return ResponseEntity.ok(Result.success("update success"));
         } else {

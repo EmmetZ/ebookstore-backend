@@ -41,7 +41,7 @@ public class BookController {
     }
 
     @GetMapping("/api/book/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Integer id) {
+    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
         Optional<BookDTO> bookOpt = bookService.getBookById(id);
         if (bookOpt.isEmpty()) {
             return ResponseEntity.notFound().build();

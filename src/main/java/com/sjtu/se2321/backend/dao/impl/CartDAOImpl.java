@@ -16,12 +16,12 @@ public class CartDAOImpl implements CartDAO {
     private CartRepository cartRepository;
 
     @Override
-    public List<CartItem> findAllByUserId(Integer userId) {
+    public List<CartItem> findAllByUserId(Long userId) {
         return cartRepository.findAllByUserId(userId);
     }
 
     @Override
-    public boolean updateCartItem(Integer id, Integer number) {
+    public boolean updateCartItem(Long id, Integer number) {
         return cartRepository.updateCartItem(id, number); 
     }
 }

@@ -25,13 +25,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDTO> searchBooks(int limit, int offset, String tag, String keyword) {
-        int tagId = -1;
+        Long tagId = Long.valueOf(-1);
         if (!tag.isEmpty()) {
             Optional<Tag> tagOpt = tagDAO.getTagByName(tag);
             if (tagOpt.isPresent()) {
                 tagId = tagOpt.get().getId();
             } else {
-                tagId = 0;
+                tagId = Long.valueOf(0);
             }
         }
         List<Book> books = bookDAO.searchBooks(limit, offset, tagId, keyword);
@@ -44,7 +44,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<BookDTO> getBookById(Integer id) {
+    public Optional<BookDTO> getBookById(Long id) {
         Optional<Book> bookOpt = bookDAO.getBookById(id);
         if (bookOpt.isPresent()) {
             Book book = bookOpt.get();
@@ -55,13 +55,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Integer countSearchResult(int tagId, String keyword) {
+    public Integer countSearchResult(Long tagId, String keyword) {
         return bookDAO.countSearchResult(tagId, keyword);
     }
 
     @Override
     public int getTotal(int pageSize) {
-        int total = bookDAO.countSearchResult(0, "");
+        int total = bookDAO.countSearchResult(Long.valueOf(0), "");
         return (int) Math.ceil((double) total / pageSize);
     }
 

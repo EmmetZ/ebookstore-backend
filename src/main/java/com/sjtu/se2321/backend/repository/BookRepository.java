@@ -23,7 +23,7 @@ public class BookRepository {
         @Override
         public Book mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
             Book book = new Book();
-            book.setId(rs.getInt("id"));
+            book.setId(rs.getLong("id"));
             book.setTitle(rs.getString("title"));
             book.setAuthor(rs.getString("author"));
             book.setPrice(rs.getInt("price"));
@@ -42,12 +42,12 @@ public class BookRepository {
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Book", Integer.class);
     }
 
-    public Optional<Book> findById(Integer id) {
+    public Optional<Book> findById(Long id) {
         List<Book> books = jdbcTemplate.query("SELECT * FROM Book WHERE id = ?", rowMapper, id);
         return books.isEmpty() ? Optional.empty() : Optional.of(books.get(0));
     }
 
-    public List<Book> searchBooks(int limit, int offset, int tagId, String keyword) {
+    public List<Book> searchBooks(int limit, int offset, Long tagId, String keyword) {
         StringBuilder sqlBuilder = new StringBuilder("SELECT DISTINCT b.* FROM Book b ");
 
         int paramCount = 2;
@@ -90,7 +90,7 @@ public class BookRepository {
         return jdbcTemplate.query(sql, rowMapper, params);
     }
 
-    public Integer countSearchResult(int tagId, String keyword) {
+    public Integer countSearchResult(Long tagId, String keyword) {
         StringBuilder sqlBuilder = new StringBuilder("SELECT COUNT(DISTINCT b.id) FROM Book b ");
 
         int paramCount = 0;

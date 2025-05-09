@@ -23,13 +23,13 @@ public class UserAuthRepository {
         @Override
         public UserAuth mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
             UserAuth userAuth = new UserAuth();
-            userAuth.setId(rs.getInt("id"));
+            userAuth.setId(rs.getLong("id"));
             userAuth.setPassword(rs.getString("password"));
             return userAuth;
         }
     };
 
-    public Optional<UserAuth> findByUserId(Integer id) {
+    public Optional<UserAuth> findByUserId(Long id) {
         List<UserAuth> userAuths = jdbcTemplate.query("SELECT * FROM UserAuth WHERE id = ?", rowMapper, id);
         return userAuths.isEmpty() ? Optional.empty() : Optional.of(userAuths.get(0));
     }

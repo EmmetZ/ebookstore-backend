@@ -9,8 +9,8 @@ public interface UserDAO {
 
     public Optional<User> getUserByUsername(String username);
 
-    public Optional<User> getUserById(Integer id);
+    public Optional<User> getUserById(Long id);
 
-    public Optional<UserAuth> getUserAuthByUserId(Integer userId);
+    public Optional<UserAuth> getUserAuthByUserId(Long userId);
 
 }

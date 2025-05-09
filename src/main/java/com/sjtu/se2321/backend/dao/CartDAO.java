@@ -5,7 +5,7 @@ import java.util.List;
 import com.sjtu.se2321.backend.entity.CartItem;
 
 public interface CartDAO {
-    public List<CartItem> findAllByUserId(Integer userId);
+    public List<CartItem> findAllByUserId(Long userId);
 
-    public boolean updateCartItem(Integer id, Integer number);
+    public boolean updateCartItem(Long id, Integer number);
 }

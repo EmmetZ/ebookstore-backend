@@ -25,7 +25,7 @@ public class CartServiceImpl implements CartService {
     private BookDAO bookDAO;
 
     @Override
-    public List<CartItemDTO> getCartItemsByUserId(Integer userId) {
+    public List<CartItemDTO> getCartItemsByUserId(Long userId) {
         List<CartItem> items = cartDAO.findAllByUserId(userId);
         if (items.isEmpty()) {
             return List.of();
@@ -40,7 +40,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public boolean updateCartItem(Integer id, Integer number) {
+    public boolean updateCartItem(Long id, Integer number) {
         return cartDAO.updateCartItem(id, number);
     }
 }

@@ -9,9 +9,9 @@ public interface TagDAO {
 
     public List<Tag> getAllTags();
 
-    public Optional<Tag> getTagById(Integer id);
+    public Optional<Tag> getTagById(Long id);
 
-    public Optional<List<Tag>> getTagByBookId(Integer bookId);
+    public Optional<List<Tag>> getTagByBookId(Long bookId);
 
     public Optional<Tag> getTagByName(String name);
 

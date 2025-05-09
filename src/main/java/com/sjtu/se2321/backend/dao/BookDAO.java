@@ -7,10 +7,10 @@ import com.sjtu.se2321.backend.entity.Book;
 
 public interface BookDAO {
 
-    public List<Book> searchBooks(int limit, int offset, int tagId, String keyword);
+    public List<Book> searchBooks(int limit, int offset, Long tagId, String keyword);
 
-    public Integer countSearchResult(int tagId, String keyword);
+    public Integer countSearchResult(Long tagId, String keyword);
 
-    public Optional<Book> getBookById(Integer id);
+    public Optional<Book> getBookById(Long id);
 
 }

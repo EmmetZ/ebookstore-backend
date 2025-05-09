@@ -46,12 +46,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(Integer userId) {
+    public Optional<User> getUserById(Long userId) {
         return userDAO.getUserById(userId);
     }
 
     @Override
-    public Optional<UserDTO> getMe(Integer userId) {
+    public Optional<UserDTO> getMe(Long userId) {
         if (userId != null) {
             Optional<User> userOpt = userDAO.getUserById(userId);
             if (userOpt.isPresent()) {

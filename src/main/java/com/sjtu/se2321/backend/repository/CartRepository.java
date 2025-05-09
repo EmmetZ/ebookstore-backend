@@ -22,19 +22,19 @@ public class CartRepository {
         @Override
         public CartItem mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
             CartItem cartItem = new CartItem();
-            cartItem.setId(rs.getInt("id"));
-            cartItem.setBookId(rs.getInt("book_id"));
-            cartItem.setUserId(rs.getInt("user_id"));
+            cartItem.setId(rs.getLong("id"));
+            cartItem.setBookId(rs.getLong("book_id"));
+            cartItem.setUserId(rs.getLong("user_id"));
             cartItem.setNumber(rs.getInt("number"));
             return cartItem;
         };
     };
 
-    public List<CartItem> findAllByUserId(Integer userId) {
+    public List<CartItem> findAllByUserId(Long userId) {
         return jdbcTemplate.query("SELECT * FROM CartItem WHERE user_id = ? ", rowMapper, userId);
     }
 
-    public boolean updateCartItem(Integer id, Integer number) {
+    public boolean updateCartItem(Long id, Integer number) {
         int rowsAffected = jdbcTemplate.update("UPDATE CartItem SET number = ? WHERE id = ?", number, id);
         return rowsAffected > 0;
     }

@@ -5,7 +5,7 @@ import java.util.List;
 import com.sjtu.se2321.backend.dto.CartItemDTO;
 
 public interface CartService {
-    public List<CartItemDTO> getCartItemsByUserId(Integer userId);
+    public List<CartItemDTO> getCartItemsByUserId(Long userId);
 
-    public boolean updateCartItem(Integer id, Integer number);
+    public boolean updateCartItem(Long id, Integer number);
 }

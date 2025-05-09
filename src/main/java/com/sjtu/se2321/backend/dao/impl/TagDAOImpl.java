@@ -22,12 +22,12 @@ public class TagDAOImpl implements TagDAO {
     }
 
     @Override
-    public Optional<Tag> getTagById(Integer id) {
+    public Optional<Tag> getTagById(Long id) {
         return tagRepository.findById(id);
     }
 
     @Override
-    public Optional<List<Tag>> getTagByBookId(Integer bookId) {
+    public Optional<List<Tag>> getTagByBookId(Long bookId) {
         return tagRepository.findByBookId(bookId);
     }
 

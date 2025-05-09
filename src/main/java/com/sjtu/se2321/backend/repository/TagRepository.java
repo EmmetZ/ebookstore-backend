@@ -23,7 +23,7 @@ public class TagRepository {
         @Override
         public Tag mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
             Tag tag = new Tag();
-            tag.setId(rs.getInt("id"));
+            tag.setId(rs.getLong("id"));
             tag.setName(rs.getString("name"));
             return tag;
         }
@@ -33,7 +33,7 @@ public class TagRepository {
         return jdbcTemplate.query("SELECT * FROM Tag", rowMapper);
     }
 
-    public Optional<List<Tag>> findByBookId(Integer id) {
+    public Optional<List<Tag>> findByBookId(Long id) {
         List<Tag> tags = jdbcTemplate.query(
                 "SELECT * FROM Tag AS t JOIN BookTag AS bt ON t.id = bt.tag_id WHERE bt.book_id = ?",
                 rowMapper,
@@ -41,7 +41,7 @@ public class TagRepository {
         return tags.isEmpty() ? Optional.empty() : Optional.of(tags);
     }
 
-    public Optional<Tag> findById(Integer id) {
+    public Optional<Tag> findById(Long id) {
         List<Tag> tags = jdbcTemplate.query("SELECT * FROM Tag WHERE id = ?", rowMapper, id);
         return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
     }

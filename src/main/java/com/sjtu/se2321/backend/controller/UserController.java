@@ -24,7 +24,7 @@ public class UserController {
     @GetMapping("/user/me")
     public ResponseEntity<UserDTO> getMe(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        Integer userId = (Integer) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute("userId");
         Optional<UserDTO> userOpt = userService.getMe(userId);
         if (userOpt.isEmpty()) {
             return ResponseEntity.notFound().build();

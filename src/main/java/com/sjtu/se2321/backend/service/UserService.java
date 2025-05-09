@@ -19,8 +19,8 @@ public interface UserService {
     /**
      * 通过ID获取用户信息
      */
-    public Optional<User> getUserById(Integer userId);
+    public Optional<User> getUserById(Long userId);
 
     // 获取当前登录的信息
-    public Optional<UserDTO> getMe(Integer userId);
+    public Optional<UserDTO> getMe(Long userId);
 }

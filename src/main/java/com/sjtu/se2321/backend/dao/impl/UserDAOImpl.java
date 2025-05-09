@@ -26,12 +26,12 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Optional<User> getUserById(Integer id) {
+    public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
     @Override
-    public Optional<UserAuth> getUserAuthByUserId(Integer userId) {
+    public Optional<UserAuth> getUserAuthByUserId(Long userId) {
         return userAuthRepository.findByUserId(userId);
     }
 }
