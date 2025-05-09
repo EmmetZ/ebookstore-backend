@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.TagDAO;
 import com.sjtu.se2321.backend.dto.BookDTO;
+import com.sjtu.se2321.backend.dto.ListResult;
 import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.entity.Tag;
 import com.sjtu.se2321.backend.service.BookService;
@@ -24,7 +25,11 @@ public class BookServiceImpl implements BookService {
     private TagDAO tagDAO;
 
     @Override
-    public List<BookDTO> searchBooks(int limit, int offset, String tag, String keyword) {
+    public ListResult<BookDTO> searchBooks(int limit, int offset, String tag, String keyword) {
+        // tag:
+        // tagId = -1 : tag is null, search all books
+        // tagId = 0 : tag is not found in db
+        // tagId > 0 : tag is found in db
         Long tagId = Long.valueOf(-1);
         if (!tag.isEmpty()) {
             Optional<Tag> tagOpt = tagDAO.getTagByName(tag);
@@ -40,7 +45,8 @@ public class BookServiceImpl implements BookService {
             List<Tag> tags = tagDAO.getTagByBookId(book.getId()).orElse(new ArrayList<>());
             bookDTOs.add(BookDTO.fromBook(book, tags));
         }
-        return bookDTOs;
+        int total = getTotal(tagId, keyword, limit);
+        return new ListResult<BookDTO>(total, bookDTOs);
     }
 
     @Override
@@ -60,8 +66,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public int getTotal(int pageSize) {
-        int total = bookDAO.countSearchResult(Long.valueOf(0), "");
+    public int getTotal(Long tagId, String keyword, int pageSize) {
+        int total = bookDAO.countSearchResult(tagId, keyword);
         return (int) Math.ceil((double) total / pageSize);
     }
 

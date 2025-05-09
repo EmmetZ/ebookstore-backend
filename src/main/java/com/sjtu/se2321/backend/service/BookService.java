@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import com.sjtu.se2321.backend.dto.BookDTO;
+import com.sjtu.se2321.backend.dto.ListResult;
 import com.sjtu.se2321.backend.entity.Tag;
 
 public interface BookService {
-    public List<BookDTO> searchBooks(int limit, int offset, String tag, String keyword);
+    public ListResult<BookDTO> searchBooks(int limit, int offset, String tag, String keyword);
 
     public Optional<BookDTO> getBookById(Long id);
 
     public Integer countSearchResult(Long tagId, String keyword);
 
-    public int getTotal(int pageSize);
+    public int getTotal(Long tagId, String keyword, int pageSize);
 
     // tag
     public List<String> getAllTags();

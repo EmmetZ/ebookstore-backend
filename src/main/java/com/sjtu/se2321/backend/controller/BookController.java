@@ -30,9 +30,7 @@ public class BookController {
         if (index == null || size == null || index < 0 || size <= 0) {
             return ResponseEntity.badRequest().build();
         }
-        List<BookDTO> books = bookService.searchBooks(size, index * size, tag, keyword);
-        int total = bookService.getTotal(reqParam.getPageSize());
-        return ResponseEntity.ok(new ListResult<>(total, books));
+        return ResponseEntity.ok(bookService.searchBooks(size, index * size, tag, keyword));
     }
 
     @GetMapping("/api/book/tags")
