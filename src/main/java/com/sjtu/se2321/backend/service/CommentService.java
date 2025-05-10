@@ -1,0 +1,13 @@
+package com.sjtu.se2321.backend.service;
+
+import com.sjtu.se2321.backend.dto.CommentDTO;
+import com.sjtu.se2321.backend.dto.PageResult;
+
+public interface CommentService {
+
+    public PageResult<CommentDTO> getBookComments(Long bookId, int pageSize, int pageIndex, String sort);
+
+    public boolean likeComment(Long userId, Long commentId);
+
+    public boolean unlikeComment(Long userId, Long commentId);
+}
