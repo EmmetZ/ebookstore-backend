@@ -1,7 +1,5 @@
 package com.sjtu.se2321.backend.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +23,11 @@ public class UserController {
     public ResponseEntity<UserDTO> getMe(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
-        Optional<UserDTO> userOpt = userService.getMe(userId);
-        if (userOpt.isEmpty()) {
+        UserDTO user = userService.getMe(userId);
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(userOpt.get());
+        return ResponseEntity.ok(user);
     }
 
 }

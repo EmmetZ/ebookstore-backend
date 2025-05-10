@@ -1,7 +1,5 @@
 package com.sjtu.se2321.backend.dao.impl;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,17 +19,17 @@ public class UserDAOImpl implements UserDAO {
     private UserAuthRepository userAuthRepository;
 
     @Override
-    public Optional<User> getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id);
     }
 
     @Override
-    public Optional<UserAuth> getUserAuthByUserId(Long userId) {
+    public UserAuth getUserAuthByUserId(Long userId) {
         return userAuthRepository.findByUserId(userId);
     }
 }

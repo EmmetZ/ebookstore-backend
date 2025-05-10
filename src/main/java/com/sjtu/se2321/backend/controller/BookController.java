@@ -1,7 +1,6 @@
 package com.sjtu.se2321.backend.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +39,11 @@ public class BookController {
 
     @GetMapping("/api/book/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
-        Optional<BookDTO> bookOpt = bookService.getBookById(id);
-        if (bookOpt.isEmpty()) {
+        BookDTO bookDTO = bookService.getBookById(id);
+        if (bookDTO == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(bookOpt.get());
+        return ResponseEntity.ok(bookDTO);
     }
 
 }

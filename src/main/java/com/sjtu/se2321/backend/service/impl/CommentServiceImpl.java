@@ -36,12 +36,12 @@ public class CommentServiceImpl implements CommentService {
             Long commentId = comment.getId();
             if (user == null) {
                 Long userId = comment.getUserId();
-                user = userDAO.getUserById(userId).get();
+                user = userDAO.getUserById(userId);
             }
             Boolean liked = commentDAO.getLikedStatus(user.getId(), commentId);
             String reply = null;
             if (comment.getReplyId() != 0) {
-                reply = userDAO.getUserById(comment.getReplyId()).get().getUsername();
+                reply = userDAO.getUserById(comment.getReplyId()).getUsername();
             }
 
             CommentDTO commentDTO = new CommentDTO();

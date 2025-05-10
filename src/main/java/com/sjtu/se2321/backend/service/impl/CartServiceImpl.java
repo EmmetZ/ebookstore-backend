@@ -2,7 +2,6 @@ package com.sjtu.se2321.backend.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +31,8 @@ public class CartServiceImpl implements CartService {
         }
         List<CartItemDTO> cart = new ArrayList<>();
         for (CartItem item : items) {
-            Optional<Book> bookOpt = bookDAO.getBookById(item.getBookId());
-            cart.add(new CartItemDTO(item.getId(), bookOpt.get(), item.getNumber()));
+            Book book = bookDAO.getBookById(item.getBookId());
+            cart.add(new CartItemDTO(item.getId(), book, item.getNumber()));
         }
         return cart;
     }

@@ -1,7 +1,5 @@
 package com.sjtu.se2321.backend.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +28,11 @@ public class LoginController {
         System.out.println("Login attempt: " + body);
 
         // 验证用户名和密码
-        Optional<User> userOpt = userService.validateLogin(body.getUsername(), body.getPassword());
+        User user = userService.validateLogin(body.getUsername(), body.getPassword());
 
-        if (userOpt.isEmpty()) {
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.OK).body(Result.error("Invalid username or password"));
         }
-
-        User user = userOpt.get();
 
         // 将用户ID存储在会话中
         session.setAttribute("userId", user.getId());

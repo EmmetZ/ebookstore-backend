@@ -1,7 +1,6 @@
 package com.sjtu.se2321.backend.dao.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,7 @@ public class BookDAOImpl implements BookDAO {
     }
 
     @Override
-    public Optional<Book> getBookById(Long id) {
+    public Book getBookById(Long id) {
         return bookRepository.findById(id);
     }
 }

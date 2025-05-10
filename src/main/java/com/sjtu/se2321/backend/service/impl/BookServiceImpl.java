@@ -2,7 +2,6 @@ package com.sjtu.se2321.backend.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,16 +24,16 @@ public class BookServiceImpl implements BookService {
     private TagDAO tagDAO;
 
     @Override
-    public PageResult<BookDTO> searchBooks(int limit, int offset, String tag, String keyword) {
+    public PageResult<BookDTO> searchBooks(int limit, int offset, String tagName, String keyword) {
         // tag:
         // tagId = -1 : tag is null, search all books
         // tagId = 0 : tag is not found in db
         // tagId > 0 : tag is found in db
         Long tagId = Long.valueOf(-1);
-        if (!tag.isEmpty()) {
-            Optional<Tag> tagOpt = tagDAO.getTagByName(tag);
-            if (tagOpt.isPresent()) {
-                tagId = tagOpt.get().getId();
+        if (!tagName.isEmpty()) {
+            Tag tag = tagDAO.getTagByName(tagName);
+            if (tag != null) {
+                tagId = tag.getId();
             } else {
                 tagId = Long.valueOf(0);
             }
@@ -42,7 +41,7 @@ public class BookServiceImpl implements BookService {
         List<Book> books = bookDAO.searchBooks(limit, offset, tagId, keyword);
         List<BookDTO> bookDTOs = new ArrayList<>();
         for (Book book : books) {
-            List<Tag> tags = tagDAO.getTagByBookId(book.getId()).orElse(new ArrayList<>());
+            List<Tag> tags = tagDAO.getTagByBookId(book.getId());
             bookDTOs.add(BookDTO.fromBook(book, tags));
         }
         int num = bookDAO.countSearchResult(tagId, keyword);
@@ -51,14 +50,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<BookDTO> getBookById(Long id) {
-        Optional<Book> bookOpt = bookDAO.getBookById(id);
-        if (bookOpt.isPresent()) {
-            Book book = bookOpt.get();
-            List<Tag> tags = tagDAO.getTagByBookId(book.getId()).orElse(new ArrayList<>());
-            return Optional.of(BookDTO.fromBook(book, tags));
+    public BookDTO getBookById(Long id) {
+        Book book = bookDAO.getBookById(id);
+        if (book != null) {
+            List<Tag> tags = tagDAO.getTagByBookId(book.getId());
+            return BookDTO.fromBook(book, tags);
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -69,7 +67,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Tag> getTagByName(String name) {
+    public Tag getTagByName(String name) {
         return tagDAO.getTagByName(name);
     }
 }

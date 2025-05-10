@@ -1,7 +1,5 @@
 package com.sjtu.se2321.backend.service.impl;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,47 +16,43 @@ public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
 
     @Override
-    public Optional<User> validateLogin(String username, String password) {
+    public User validateLogin(String username, String password) {
         // 根据用户名查找用户
-        Optional<User> userOpt = userDAO.getUserByUsername(username);
+        User user = userDAO.getUserByUsername(username);
 
-        if (userOpt.isEmpty()) {
-            return Optional.empty();
+        if (user == null) {
+            return null;
         }
-
-        User user = userOpt.get();
 
         // 获取用户认证信息
-        Optional<UserAuth> userAuthOpt = userDAO.getUserAuthByUserId(user.getId());
+        UserAuth userAuth = userDAO.getUserAuthByUserId(user.getId());
 
-        if (userAuthOpt.isEmpty()) {
-            return Optional.empty();
+        if (userAuth == null) {
+            return null;
         }
-
-        UserAuth userAuth = userAuthOpt.get();
 
         // 验证密码是否匹配
         if (password.equals(userAuth.getPassword())) {
-            return Optional.of(user);
+            return user;
         }
 
-        return Optional.empty();
+        return null;
     }
 
     @Override
-    public Optional<User> getUserById(Long userId) {
+    public User getUserById(Long userId) {
         return userDAO.getUserById(userId);
     }
 
     @Override
-    public Optional<UserDTO> getMe(Long userId) {
+    public UserDTO getMe(Long userId) {
         if (userId != null) {
-            Optional<User> userOpt = userDAO.getUserById(userId);
-            if (userOpt.isPresent()) {
-                return Optional.of(UserDTO.fromUser(userOpt.get()));
+            User user = userDAO.getUserById(userId);
+            if (user != null) {
+                return UserDTO.fromUser(user);
             }
         }
-        return Optional.empty();
+        return null;
     }
 
 }

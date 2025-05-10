@@ -2,8 +2,6 @@ package com.sjtu.se2321.backend.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,8 +27,7 @@ public class UserAuthRepository {
         }
     };
 
-    public Optional<UserAuth> findByUserId(Long id) {
-        List<UserAuth> userAuths = jdbcTemplate.query("SELECT * FROM UserAuth WHERE id = ?", rowMapper, id);
-        return userAuths.isEmpty() ? Optional.empty() : Optional.of(userAuths.get(0));
+    public UserAuth findByUserId(Long id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM UserAuth WHERE id = ?", rowMapper, id);
     }
 }

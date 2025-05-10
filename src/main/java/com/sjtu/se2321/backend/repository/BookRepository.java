@@ -3,7 +3,6 @@ package com.sjtu.se2321.backend.repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,9 +41,8 @@ public class BookRepository {
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Book", Integer.class);
     }
 
-    public Optional<Book> findById(Long id) {
-        List<Book> books = jdbcTemplate.query("SELECT * FROM Book WHERE id = ?", rowMapper, id);
-        return books.isEmpty() ? Optional.empty() : Optional.of(books.get(0));
+    public Book findById(Long id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM Book WHERE id = ?", rowMapper, id);
     }
 
     public List<Book> searchBooks(int limit, int offset, Long tagId, String keyword) {

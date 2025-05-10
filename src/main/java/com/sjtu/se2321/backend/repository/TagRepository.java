@@ -3,7 +3,6 @@ package com.sjtu.se2321.backend.repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,21 +32,18 @@ public class TagRepository {
         return jdbcTemplate.query("SELECT * FROM Tag", rowMapper);
     }
 
-    public Optional<List<Tag>> findByBookId(Long id) {
-        List<Tag> tags = jdbcTemplate.query(
+    public List<Tag> findByBookId(Long id) {
+        return jdbcTemplate.query(
                 "SELECT * FROM Tag AS t JOIN BookTag AS bt ON t.id = bt.tag_id WHERE bt.book_id = ?",
                 rowMapper,
                 id);
-        return tags.isEmpty() ? Optional.empty() : Optional.of(tags);
     }
 
-    public Optional<Tag> findById(Long id) {
-        List<Tag> tags = jdbcTemplate.query("SELECT * FROM Tag WHERE id = ?", rowMapper, id);
-        return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
+    public Tag findById(Long id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM Tag WHERE id = ?", rowMapper, id);
     }
 
-    public Optional<Tag> findByName(String name) {
-        List<Tag> tags = jdbcTemplate.query("SELECT * FROM Tag WHERE name = ?", rowMapper, name);
-        return tags.isEmpty() ? Optional.empty() : Optional.of(tags.get(0));
+    public Tag findByName(String name) {
+        return jdbcTemplate.queryForObject("SELECT * FROM Tag WHERE name = ?", rowMapper, name);
     }
 }
