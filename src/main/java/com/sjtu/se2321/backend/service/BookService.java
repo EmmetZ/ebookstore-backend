@@ -12,10 +12,6 @@ public interface BookService {
 
     public Optional<BookDTO> getBookById(Long id);
 
-    public Integer countSearchResult(Long tagId, String keyword);
-
-    public int getTotal(Long tagId, String keyword, int pageSize);
-
     // tag
     public List<String> getAllTags();
 

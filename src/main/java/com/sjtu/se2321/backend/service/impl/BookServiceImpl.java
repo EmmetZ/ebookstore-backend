@@ -45,7 +45,8 @@ public class BookServiceImpl implements BookService {
             List<Tag> tags = tagDAO.getTagByBookId(book.getId()).orElse(new ArrayList<>());
             bookDTOs.add(BookDTO.fromBook(book, tags));
         }
-        int total = getTotal(tagId, keyword, limit);
+        int num = bookDAO.countSearchResult(tagId, keyword);
+        int total = (int) Math.ceil((double) num / limit);
         return new PageResult<BookDTO>(total, bookDTOs);
     }
 
@@ -58,17 +59,6 @@ public class BookServiceImpl implements BookService {
             return Optional.of(BookDTO.fromBook(book, tags));
         }
         return Optional.empty();
-    }
-
-    @Override
-    public Integer countSearchResult(Long tagId, String keyword) {
-        return bookDAO.countSearchResult(tagId, keyword);
-    }
-
-    @Override
-    public int getTotal(Long tagId, String keyword, int pageSize) {
-        int total = bookDAO.countSearchResult(tagId, keyword);
-        return (int) Math.ceil((double) total / pageSize);
     }
 
     @Override
