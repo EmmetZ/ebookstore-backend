@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sjtu.se2321.backend.entity.Address;
+import com.sjtu.se2321.backend.entity.Order;
 
 import lombok.Data;
 
@@ -21,10 +21,13 @@ public class OrderDTO {
         this.items = new ArrayList<>();
     }
 
-    public void setAddress(Address address) {
-        this.address = address.getAddress();
-        this.receiver = address.getReceiver();
-        this.tel = address.getTel();
+    public OrderDTO(Order order) {
+        this.id = order.getId();
+        this.receiver = order.getReceiver();
+        this.address = order.getAddress();
+        this.tel = order.getTel();
+        this.createdAt = order.getCreatedAt();
+        this.items = new ArrayList<>();
     }
 
     public void addItem(OrderItemDTO item) {

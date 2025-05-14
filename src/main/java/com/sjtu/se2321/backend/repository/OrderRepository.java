@@ -24,14 +24,17 @@ public class OrderRepository {
             Order order = new Order();
             order.setId(rs.getLong("id"));
             order.setUserId(rs.getLong("user_id"));
-            order.setAddressId(rs.getLong("address_id"));
+            order.setAddress(rs.getString("address"));
+            order.setTel(rs.getString("tel"));
+            order.setReceiver(rs.getString("receiver"));
             order.setCreatedAt(rs.getObject("created_at", java.time.OffsetDateTime.class));
             return order;
         };
     };
 
     public List<Order> findAllByUserId(Long userId) {
-        return jdbcTemplate.query("SELECT * FROM `Order` o WHERE user_id = ? ORDER BY created_at DESC", rowMapper, userId);
+        return jdbcTemplate.query("SELECT * FROM `Order` o WHERE user_id = ? ORDER BY created_at DESC", rowMapper,
+                userId);
     }
 
 }
