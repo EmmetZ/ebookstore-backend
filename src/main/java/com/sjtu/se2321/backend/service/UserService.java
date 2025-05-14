@@ -1,5 +1,8 @@
 package com.sjtu.se2321.backend.service;
 
+import java.util.List;
+
+import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.User;
 
@@ -21,4 +24,7 @@ public interface UserService {
 
     // 获取当前登录的信息
     public UserDTO getMe(Long userId);
+
+    // 获取用户地址信息
+    public List<AddressDTO> getUserAddress(Long userId);
 }

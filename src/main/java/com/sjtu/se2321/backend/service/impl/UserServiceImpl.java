@@ -1,10 +1,16 @@
 package com.sjtu.se2321.backend.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sjtu.se2321.backend.dao.AddressDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
+import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
+import com.sjtu.se2321.backend.entity.Address;
 import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.entity.UserAuth;
 import com.sjtu.se2321.backend.service.UserService;
@@ -14,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDAO userDAO;
+
+    @Autowired
+    private AddressDAO addressDAO;
 
     @Override
     public User validateLogin(String username, String password) {
@@ -53,6 +62,15 @@ public class UserServiceImpl implements UserService {
             }
         }
         return null;
+    }
+
+    public List<AddressDTO> getUserAddress(Long userId) {
+        List<Address> addressList = addressDAO.findAllByUserId(userId);
+        List<AddressDTO> result = new ArrayList<>();
+        for (Address addr : addressList) {
+            result.add(new AddressDTO(addr));
+        }
+        return result;
     }
 
 }
