@@ -6,4 +6,6 @@ import com.sjtu.se2321.backend.dto.OrderDTO;
 
 public interface OrderService {
     public List<OrderDTO> getUserOrders(Long userId);
+
+    public void placeOrder(Long userId, String address, String tel, String receiver, List<Long> itemIds);
 }

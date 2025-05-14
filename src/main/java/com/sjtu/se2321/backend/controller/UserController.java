@@ -1,11 +1,13 @@
 package com.sjtu.se2321.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.service.UserService;
 
@@ -13,13 +15,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/user/me")
+    @GetMapping("/api/user/me")
     public ResponseEntity<UserDTO> getMe(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
@@ -30,4 +31,11 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/api/user/me/addresses")
+    public ResponseEntity<List<AddressDTO>> getMethodName(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long userId = (Long) session.getAttribute("userId");
+        List<AddressDTO> addresses = userService.getUserAddress(userId);
+        return ResponseEntity.ok(addresses);
+    }
 }

@@ -6,4 +6,6 @@ import com.sjtu.se2321.backend.entity.OrderItem;
 
 public interface OrderItemDAO {
     public List<OrderItem> findAllByOrderId(Long orderId);
+
+    public void addOrderItem(Long orderId, Long bookId, Integer number);
 }

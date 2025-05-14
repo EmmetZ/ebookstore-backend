@@ -34,4 +34,9 @@ public class CartDAOImpl implements CartDAO {
     public boolean deleteCartItem(Long id) {
         return cartRepository.deleteCartItem(id);
     }
+
+    @Override
+    public CartItem findById(Long id) {
+        return cartRepository.findById(id);
+    }
 }

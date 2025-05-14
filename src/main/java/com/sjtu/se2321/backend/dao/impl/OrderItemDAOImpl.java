@@ -19,4 +19,9 @@ public class OrderItemDAOImpl implements OrderItemDAO {
     public List<OrderItem> findAllByOrderId(Long orderId) {
         return orderItemRepository.findAllByOrderId(orderId);
     }
+
+    @Override
+    public void addOrderItem(Long orderId, Long bookId, Integer number) {
+        orderItemRepository.addOrderItem(orderId, bookId, number);
+    }
 }

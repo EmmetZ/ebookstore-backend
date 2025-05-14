@@ -12,4 +12,6 @@ public interface CartDAO {
     public boolean addBookToCart(Long bookId, Long userId);
 
     public boolean deleteCartItem(Long id);
+
+    public CartItem findById(Long id);
 }

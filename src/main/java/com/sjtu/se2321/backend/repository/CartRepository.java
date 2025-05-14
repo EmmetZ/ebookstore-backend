@@ -50,4 +50,8 @@ public class CartRepository {
         int rowsAffected = jdbcTemplate.update("DELETE FROM CartItem WHERE id = ?", id);
         return rowsAffected > 0;
     }
+
+    public CartItem findById(Long id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM CartItem WHERE id = ?", rowMapper, id);
+    }
 }

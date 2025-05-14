@@ -9,6 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 import com.sjtu.se2321.backend.entity.Order;
 
@@ -37,4 +41,25 @@ public class OrderRepository {
                 userId);
     }
 
+    public Long addOrder(Long userId, String address, String tel, String receiver) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                "INSERT INTO `Order` (user_id, address, tel, receiver) VALUES (?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setLong(1, userId);
+            ps.setString(2, address);
+            ps.setString(3, tel);
+            ps.setString(4, receiver);
+            return ps;
+        }, keyHolder);
+        
+        Number id = keyHolder.getKey();
+        if (id == null) {
+            throw new RuntimeException("Failed to retrieve ID for newly created order");
+        }
+        return id.longValue();
+    }
 }

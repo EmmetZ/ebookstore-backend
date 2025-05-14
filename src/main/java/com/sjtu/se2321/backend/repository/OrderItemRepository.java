@@ -34,4 +34,8 @@ public class OrderItemRepository {
         return jdbcTemplate.query("SELECT * FROM OrderItem WHERE order_id = ? ", rowMapper, orderId);
     }
 
+    public void addOrderItem(Long orderId, Long bookId, int number) {
+        jdbcTemplate.update("INSERT INTO OrderItem (order_id, book_id, number) VALUES (?, ?, ?)", orderId, bookId,
+                number);
+    }
 }

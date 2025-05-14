@@ -20,4 +20,9 @@ public class OrderDAOImpl implements OrderDAO {
         return orderRepository.findAllByUserId(userId);
     }
 
+    @Override
+    public Long addOrder(Long userId, String address, String tel, String receiver) {
+        return orderRepository.addOrder(userId, address, tel, receiver);
+    }
+
 }
