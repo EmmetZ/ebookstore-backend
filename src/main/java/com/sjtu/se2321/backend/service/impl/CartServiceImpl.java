@@ -42,4 +42,16 @@ public class CartServiceImpl implements CartService {
     public boolean updateCartItem(Long id, Integer number) {
         return cartDAO.updateCartItem(id, number);
     }
+
+    @Override
+    @Transactional
+    public boolean addBookToCart(Long bookId, Long userId) {
+        return cartDAO.addBookToCart(bookId, userId);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteCartItem(Long id) {
+        return cartDAO.deleteCartItem(id);
+    }
 }

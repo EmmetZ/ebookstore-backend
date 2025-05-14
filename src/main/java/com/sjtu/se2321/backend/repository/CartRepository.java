@@ -38,4 +38,16 @@ public class CartRepository {
         int rowsAffected = jdbcTemplate.update("UPDATE CartItem SET number = ? WHERE id = ?", number, id);
         return rowsAffected > 0;
     }
+
+    public boolean addBookToCart(Long bookId, Long userId) {
+        int rowsAffected = jdbcTemplate.update(
+                "INSERT INTO CartItem (book_id, user_id, number) VALUES (?, ?, ?)",
+                bookId, userId, 1);
+        return rowsAffected > 0;
+    }
+
+    public boolean deleteCartItem(Long id) {
+        int rowsAffected = jdbcTemplate.update("DELETE FROM CartItem WHERE id = ?", id);
+        return rowsAffected > 0;
+    }
 }

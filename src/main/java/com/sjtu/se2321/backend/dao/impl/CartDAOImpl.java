@@ -22,6 +22,16 @@ public class CartDAOImpl implements CartDAO {
 
     @Override
     public boolean updateCartItem(Long id, Integer number) {
-        return cartRepository.updateCartItem(id, number); 
+        return cartRepository.updateCartItem(id, number);
+    }
+
+    @Override
+    public boolean addBookToCart(Long bookId, Long userId) {
+        return cartRepository.addBookToCart(bookId, userId);
+    }
+
+    @Override
+    public boolean deleteCartItem(Long id) {
+        return cartRepository.deleteCartItem(id);
     }
 }

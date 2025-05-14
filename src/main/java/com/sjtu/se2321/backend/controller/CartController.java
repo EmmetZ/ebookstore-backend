@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,5 +38,25 @@ public class CartController {
         } else {
             return ResponseEntity.ok(Result.error("update failed"));
         }
+    }
+
+    @PutMapping("/api/cart")
+    public ResponseEntity<Result<Void>> addBookToCart(@RequestParam Long bookId, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long userId = (Long) session.getAttribute("userId");
+        boolean res = cartService.addBookToCart(bookId, userId);
+        if (res == false) {
+            return ResponseEntity.ok(Result.error("add failed"));
+        }
+        return ResponseEntity.ok(Result.success("add success"));
+    }
+
+    @DeleteMapping("/api/cart/{id}")
+    public ResponseEntity<Result<Void>> deleteCartItem(@PathVariable Long id) {
+        boolean res = cartService.deleteCartItem(id);
+        if (res == false) {
+            return ResponseEntity.ok(Result.error("delete failed"));    
+        }
+        return ResponseEntity.ok(Result.success("delete success"));
     }
 }

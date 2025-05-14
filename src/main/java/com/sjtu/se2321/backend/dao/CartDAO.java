@@ -8,4 +8,8 @@ public interface CartDAO {
     public List<CartItem> findAllByUserId(Long userId);
 
     public boolean updateCartItem(Long id, Integer number);
+
+    public boolean addBookToCart(Long bookId, Long userId);
+
+    public boolean deleteCartItem(Long id);
 }
