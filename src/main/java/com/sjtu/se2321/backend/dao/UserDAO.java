@@ -11,4 +11,5 @@ public interface UserDAO {
 
     public UserAuth getUserAuthByUserId(Long userId);
 
+    public void updateUserBalance(Long userId, int balance);
 }

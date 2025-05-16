@@ -12,4 +12,6 @@ public interface BookDAO {
 
     public Book getBookById(Long id);
 
+    public void updateBookSale(Long id, int sales);
+
 }

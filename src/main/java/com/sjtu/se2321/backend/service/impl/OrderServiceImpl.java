@@ -11,6 +11,7 @@ import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.CartDAO;
 import com.sjtu.se2321.backend.dao.OrderDAO;
 import com.sjtu.se2321.backend.dao.OrderItemDAO;
+import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.dto.OrderDTO;
 import com.sjtu.se2321.backend.dto.OrderItemDTO;
 import com.sjtu.se2321.backend.entity.Book;
@@ -33,6 +34,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CartDAO cartDAO;
+
+    @Autowired
+    private UserDAO userDAO;
 
     @Override
     public List<OrderDTO> getUserOrders(Long userId) {
@@ -61,10 +65,14 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void placeOrder(Long userId, String address, String tel, String receiver, List<Long> itemIds) {
         Long orderId = orderDAO.addOrder(userId, address, tel, receiver);
+        int cost = 0;
         for (Long itemId : itemIds) {
             CartItem cartItem = cartDAO.findById(itemId);
             orderItemDAO.addOrderItem(orderId, cartItem.getBookId(), cartItem.getNumber());
             cartDAO.deleteCartItem(cartItem.getId());
+            bookDAO.updateBookSale(cartItem.getBookId(), cartItem.getNumber());
+            cost += cartItem.getNumber() * bookDAO.getBookById(cartItem.getBookId()).getPrice();
         }
+        userDAO.updateUserBalance(userId, -cost);
     }
 }

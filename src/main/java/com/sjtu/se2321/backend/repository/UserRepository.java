@@ -37,4 +37,8 @@ public class UserRepository {
     public User findById(Long id) {
         return jdbcTemplate.queryForObject("SELECT * FROM User WHERE id = ?", rowMapper, id);
     }
+
+    public void updateUserBalance(Long id, int balance) {
+        jdbcTemplate.update("UPDATE User SET balance = balance + ? WHERE id = ?", balance, id);
+    }
 }

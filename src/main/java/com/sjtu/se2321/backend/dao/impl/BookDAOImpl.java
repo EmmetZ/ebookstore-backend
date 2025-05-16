@@ -29,4 +29,9 @@ public class BookDAOImpl implements BookDAO {
     public Book getBookById(Long id) {
         return bookRepository.findById(id);
     }
+
+    @Override
+    public void updateBookSale(Long id, int sales) {
+        bookRepository.updateBookSale(id, sales);
+    }
 }

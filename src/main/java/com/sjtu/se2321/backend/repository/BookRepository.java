@@ -128,4 +128,8 @@ public class BookRepository {
         String sql = sqlBuilder.toString();
         return jdbcTemplate.queryForObject(sql, Integer.class, params);
     }
+
+    public void updateBookSale(Long id, int number) {
+        jdbcTemplate.update("UPDATE Book SET sales = sales + ? WHERE id = ?", number, id);
+    }
 }

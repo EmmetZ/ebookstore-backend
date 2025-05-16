@@ -32,4 +32,9 @@ public class UserDAOImpl implements UserDAO {
     public UserAuth getUserAuthByUserId(Long userId) {
         return userAuthRepository.findByUserId(userId);
     }
+
+    @Override
+    public void updateUserBalance(Long userId, int balance) {
+        userRepository.updateUserBalance(userId, balance);
+    }
 }
