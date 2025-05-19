@@ -5,3 +5,11 @@ spring:
         username: root
         password: 123
         driverClassName: com.mysql.cj.jdbc.Driver
+    jpa:
+        hibernate:
+            naming:
+                # do not convert table names to lowercase
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect

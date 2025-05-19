@@ -6,12 +6,12 @@ import com.sjtu.se2321.backend.entity.Book;
 
 public interface BookDAO {
 
-    public List<Book> searchBooks(int limit, int offset, Long tagId, String keyword);
+    public List<Book> findAllByKeywordAndTag(int limit, int offset, Long tagId, String keyword);
 
-    public Integer countSearchResult(Long tagId, String keyword);
+    public Long countByKeywordAndTag(Long tagId, String keyword);
 
-    public Book getBookById(Long id);
+    public Book findById(Long id);
 
-    public void updateBookSale(Long id, int sales);
+    public void updateBookSales(Long id, int sales);
 
 }

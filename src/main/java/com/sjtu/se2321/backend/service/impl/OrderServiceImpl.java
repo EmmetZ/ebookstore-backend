@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
             for (OrderItem orderItem : orderItems) {
                 OrderItemDTO orderItemDTO = new OrderItemDTO();
                 orderItemDTO.setId(orderItem.getId());
-                Book book = bookDAO.getBookById(orderItem.getBookId());
+                Book book = bookDAO.findById(orderItem.getBookId());
                 orderItemDTO.setBook(book);
                 orderItemDTO.setNumber(orderItem.getNumber());
                 orderDTO.addItem(orderItemDTO);
@@ -70,8 +70,8 @@ public class OrderServiceImpl implements OrderService {
             CartItem cartItem = cartDAO.findById(itemId);
             orderItemDAO.addOrderItem(orderId, cartItem.getBookId(), cartItem.getNumber());
             cartDAO.deleteCartItem(cartItem.getId());
-            bookDAO.updateBookSale(cartItem.getBookId(), cartItem.getNumber());
-            cost += cartItem.getNumber() * bookDAO.getBookById(cartItem.getBookId()).getPrice();
+            bookDAO.updateBookSales(cartItem.getBookId(), cartItem.getNumber());
+            cost += cartItem.getNumber() * bookDAO.findById(cartItem.getBookId()).getPrice();
         }
         userDAO.updateUserBalance(userId, -cost);
     }

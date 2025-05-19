@@ -3,11 +3,16 @@ package com.sjtu.se2321.backend.dao.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.repository.BookRepository;
+import com.sjtu.se2321.backend.repository.specification.BookSpecifications;
 
 @Component
 public class BookDAOImpl implements BookDAO {
@@ -16,22 +21,25 @@ public class BookDAOImpl implements BookDAO {
     private BookRepository bookRepository;
 
     @Override
-    public List<Book> searchBooks(int limit, int offset, Long tagId, String keyword) {
-        return bookRepository.searchBooks(limit, offset, tagId, keyword);
+    public List<Book> findAllByKeywordAndTag(int limit, int offset, Long tagId, String keyword) {
+        Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by("id").ascending());
+        Specification<Book> spec = BookSpecifications.withFilters(tagId, keyword);
+        return bookRepository.findAll(spec, pageable).getContent();
     }
 
     @Override
-    public Integer countSearchResult(Long tagId, String keyword) {
-        return bookRepository.countSearchResult(tagId, keyword);
+    public Long countByKeywordAndTag(Long tagId, String keyword) {
+        Specification<Book> spec = BookSpecifications.withFilters(tagId, keyword);
+        return bookRepository.count(spec);
     }
 
     @Override
-    public Book getBookById(Long id) {
-        return bookRepository.findById(id);
+    public Book findById(Long id) {
+        return bookRepository.findById(id).orElseThrow();
     }
 
     @Override
-    public void updateBookSale(Long id, int sales) {
+    public void updateBookSales(Long id, int sales) {
         bookRepository.updateBookSale(id, sales);
     }
 }

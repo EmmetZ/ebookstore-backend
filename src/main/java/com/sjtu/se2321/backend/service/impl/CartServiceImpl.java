@@ -31,7 +31,7 @@ public class CartServiceImpl implements CartService {
         }
         List<CartItemDTO> cart = new ArrayList<>();
         for (CartItem item : items) {
-            Book book = bookDAO.getBookById(item.getBookId());
+            Book book = bookDAO.findById(item.getBookId());
             cart.add(new CartItemDTO(item.getId(), book, item.getNumber()));
         }
         return cart;
