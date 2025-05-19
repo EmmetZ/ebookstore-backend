@@ -16,22 +16,12 @@ public class TagDAOImpl implements TagDAO {
     private TagRepository tagRepository;
 
     @Override
-    public List<Tag> getAllTags() {
+    public List<Tag> findAll() {
         return tagRepository.findAll();
     }
 
     @Override
-    public Tag getTagById(Long id) {
-        return tagRepository.findById(id);
-    }
-
-    @Override
-    public List<Tag> getTagByBookId(Long bookId) {
-        return tagRepository.findByBookId(bookId);
-    }
-
-    @Override
-    public Tag getTagByName(String name) {
+    public Tag findByName(String name) {
         return tagRepository.findByName(name);
     }
 }

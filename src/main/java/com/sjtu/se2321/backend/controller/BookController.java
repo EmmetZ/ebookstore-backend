@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookReqParam;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.entity.Book;
@@ -30,21 +29,17 @@ public class BookController {
         if (index == null || size == null || index < 0 || size <= 0) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(bookService.findAllByKeywordAndTag(size, index * size, tag, keyword));
+        return ResponseEntity.ok(bookService.findBookByKeywordAndTag(size, index * size, tag, keyword));
     }
 
     @GetMapping("/api/book/tags")
-    public ResponseEntity<List<String>> getAllTags() {
-        return ResponseEntity.ok(bookService.getAllTags());
+    public ResponseEntity<List<String>> findAllTags() {
+        return ResponseEntity.ok(bookService.findAllTags());
     }
 
     @GetMapping("/api/book/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
-        BookDTO bookDTO = bookService.countByKeywordAndTag(id);
-        if (bookDTO == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(bookDTO);
+    public ResponseEntity<Book> findBookById(@PathVariable Long id) {
+        return ResponseEntity.ok(bookService.findBookById(id));
     }
 
 }

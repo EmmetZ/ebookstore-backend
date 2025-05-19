@@ -6,12 +6,8 @@ import com.sjtu.se2321.backend.entity.Tag;
 
 public interface TagDAO {
 
-    public List<Tag> getAllTags();
+    public List<Tag> findAll();
 
-    public Tag getTagById(Long id);
-
-    public List<Tag> getTagByBookId(Long bookId);
-
-    public Tag getTagByName(String name);
+    public Tag findByName(String name);
 
 }
