@@ -21,22 +21,22 @@ public class CartDAOImpl implements CartDAO {
     }
 
     @Override
-    public boolean updateCartItem(Long id, Integer number) {
-        return cartRepository.updateCartItem(id, number);
+    public void updateCartItem(Long id, Integer number) {
+        cartRepository.updateCartItem(id, number);
     }
 
     @Override
-    public boolean addBookToCart(Long bookId, Long userId) {
-        return cartRepository.addBookToCart(bookId, userId);
+    public void save(Long bookId, Long userId) {
+        cartRepository.save(new CartItem(bookId, userId, 1));
     }
 
     @Override
-    public boolean deleteCartItem(Long id) {
-        return cartRepository.deleteCartItem(id);
+    public void delete(Long id) {
+        cartRepository.deleteById(id);
     }
 
     @Override
     public CartItem findById(Long id) {
-        return cartRepository.findById(id);
+        return cartRepository.findById(id).orElseThrow();
     }
 }

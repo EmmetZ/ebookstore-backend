@@ -28,35 +28,26 @@ public class CartController {
     public ResponseEntity<List<CartItemDTO>> getCartItemsByUserId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
-        return ResponseEntity.ok(cartService.getCartItemsByUserId(userId));
+        return ResponseEntity.ok(cartService.findAllByUserId(userId));
     }
 
     @PutMapping("/api/cart/{id}")
     public ResponseEntity<Result<Void>> updateCartItem(@PathVariable Long id, @RequestParam Integer number) {
-        if (cartService.updateCartItem(id, number)) {
-            return ResponseEntity.ok(Result.success("update success"));
-        } else {
-            return ResponseEntity.ok(Result.error("update failed"));
-        }
+        cartService.updateCartItem(id, number);
+        return ResponseEntity.ok(Result.success("update success"));
     }
 
     @PutMapping("/api/cart")
     public ResponseEntity<Result<Void>> addBookToCart(@RequestParam Long bookId, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
-        boolean res = cartService.addBookToCart(bookId, userId);
-        if (res == false) {
-            return ResponseEntity.ok(Result.error("add failed"));
-        }
+        cartService.save(bookId, userId);
         return ResponseEntity.ok(Result.success("add success"));
     }
 
     @DeleteMapping("/api/cart/{id}")
-    public ResponseEntity<Result<Void>> deleteCartItem(@PathVariable Long id) {
-        boolean res = cartService.deleteCartItem(id);
-        if (res == false) {
-            return ResponseEntity.ok(Result.error("delete failed"));    
-        }
+    public ResponseEntity<Result<Void>> delete(@PathVariable Long id) {
+        cartService.delete(id);
         return ResponseEntity.ok(Result.success("delete success"));
     }
 }

@@ -1,57 +1,20 @@
 package com.sjtu.se2321.backend.repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.sjtu.se2321.backend.entity.CartItem;
 
-@Repository
-public class CartRepository {
+public interface CartRepository extends JpaRepository<CartItem, Long> {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @Modifying
+    @Query("UPDATE CartItem SET number = :number WHERE id = :id")
+    public void updateCartItem(@Param("id") Long id, @Param("number") Integer number);
 
-    private final RowMapper<CartItem> rowMapper = new RowMapper<CartItem>() {
-        @Override
-        public CartItem mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
-            CartItem cartItem = new CartItem();
-            cartItem.setId(rs.getLong("id"));
-            cartItem.setBookId(rs.getLong("book_id"));
-            cartItem.setUserId(rs.getLong("user_id"));
-            cartItem.setNumber(rs.getInt("number"));
-            return cartItem;
-        };
-    };
+    public List<CartItem> findAllByUserId(Long userId);
 
-    public List<CartItem> findAllByUserId(Long userId) {
-        return jdbcTemplate.query("SELECT * FROM CartItem WHERE user_id = ? ", rowMapper, userId);
-    }
-
-    public boolean updateCartItem(Long id, Integer number) {
-        int rowsAffected = jdbcTemplate.update("UPDATE CartItem SET number = ? WHERE id = ?", number, id);
-        return rowsAffected > 0;
-    }
-
-    public boolean addBookToCart(Long bookId, Long userId) {
-        int rowsAffected = jdbcTemplate.update(
-                "INSERT INTO CartItem (book_id, user_id, number) VALUES (?, ?, ?)",
-                bookId, userId, 1);
-        return rowsAffected > 0;
-    }
-
-    public boolean deleteCartItem(Long id) {
-        int rowsAffected = jdbcTemplate.update("DELETE FROM CartItem WHERE id = ?", id);
-        return rowsAffected > 0;
-    }
-
-    public CartItem findById(Long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM CartItem WHERE id = ?", rowMapper, id);
-    }
 }

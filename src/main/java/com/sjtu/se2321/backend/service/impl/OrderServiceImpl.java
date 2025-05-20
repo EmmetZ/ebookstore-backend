@@ -69,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
         for (Long itemId : itemIds) {
             CartItem cartItem = cartDAO.findById(itemId);
             orderItemDAO.addOrderItem(orderId, cartItem.getBookId(), cartItem.getNumber());
-            cartDAO.deleteCartItem(cartItem.getId());
+            cartDAO.delete(cartItem.getId());
             bookDAO.updateBookSales(cartItem.getBookId(), cartItem.getNumber());
             cost += cartItem.getNumber() * bookDAO.findById(cartItem.getBookId()).getPrice();
         }
