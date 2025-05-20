@@ -27,7 +27,7 @@ public class OrderController {
     public ResponseEntity<List<OrderDTO>> getUserOrders(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
-        List<OrderDTO> orders = orderService.getUserOrders(userId);
+        List<OrderDTO> orders = orderService.findAllByUserId(userId);
         if (orders == null || orders.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

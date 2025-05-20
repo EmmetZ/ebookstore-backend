@@ -3,6 +3,7 @@ package com.sjtu.se2321.backend.dao.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.sjtu.se2321.backend.dao.OrderDAO;
@@ -17,12 +18,13 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public List<Order> findAllByUserId(Long userId) {
-        return orderRepository.findAllByUserId(userId);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        return orderRepository.findAllByUserId(userId, sort);
     }
 
     @Override
-    public Long addOrder(Long userId, String address, String tel, String receiver) {
-        return orderRepository.addOrder(userId, address, tel, receiver);
+    public Long save(Long userId, String address, String tel, String receiver) {
+        return orderRepository.save(new Order(userId, address, tel, receiver)).getId();
     }
 
 }

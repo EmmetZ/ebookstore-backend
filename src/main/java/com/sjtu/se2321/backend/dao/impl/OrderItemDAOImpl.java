@@ -21,7 +21,7 @@ public class OrderItemDAOImpl implements OrderItemDAO {
     }
 
     @Override
-    public void addOrderItem(Long orderId, Long bookId, Integer number) {
-        orderItemRepository.addOrderItem(orderId, bookId, number);
+    public void save(Long orderId, Long bookId, Integer number) {
+        orderItemRepository.save(new OrderItem(orderId, bookId, number));
     }
 }

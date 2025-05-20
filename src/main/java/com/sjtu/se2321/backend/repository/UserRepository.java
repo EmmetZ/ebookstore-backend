@@ -11,7 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public User findByUsername(String username);
 
     @Modifying
-    @Query("UPDATE User SET balance = balance + :balance WHERE id = :userId")
+    @Query(value = "UPDATE User SET balance = balance + :balance WHERE id = :userId", nativeQuery = true)
     public void updateBalance(@Param("userId") Long userId, @Param("balance") int balance);
 
 }

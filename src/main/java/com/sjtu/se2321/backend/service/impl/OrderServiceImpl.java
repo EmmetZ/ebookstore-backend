@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private UserDAO userDAO;
 
     @Override
-    public List<OrderDTO> getUserOrders(Long userId) {
+    public List<OrderDTO> findAllByUserId(Long userId) {
         List<Order> orders = orderDAO.findAllByUserId(userId);
         List<OrderDTO> orderDTOs = new ArrayList<>();
 
@@ -64,11 +64,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void placeOrder(Long userId, String address, String tel, String receiver, List<Long> itemIds) {
-        Long orderId = orderDAO.addOrder(userId, address, tel, receiver);
+        Long orderId = orderDAO.save(userId, address, tel, receiver);
         int cost = 0;
         for (Long itemId : itemIds) {
             CartItem cartItem = cartDAO.findById(itemId);
-            orderItemDAO.addOrderItem(orderId, cartItem.getBookId(), cartItem.getNumber());
+            orderItemDAO.save(orderId, cartItem.getBookId(), cartItem.getNumber());
             cartDAO.delete(cartItem.getId());
             bookDAO.updateBookSales(cartItem.getBookId(), cartItem.getNumber());
             cost += cartItem.getNumber() * bookDAO.findById(cartItem.getBookId()).getPrice();
