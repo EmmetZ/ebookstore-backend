@@ -5,11 +5,11 @@ import com.sjtu.se2321.backend.entity.UserAuth;
 
 public interface UserDAO {
 
-    public User getUserByUsername(String username);
+    public User findByUsername(String username);
 
-    public User getUserById(Long id);
+    public User findById(Long id);
 
-    public UserAuth getUserAuthByUserId(Long userId);
+    public UserAuth findUserAuthById(Long userId);
 
-    public void updateUserBalance(Long userId, int balance);
+    public void updateBalance(Long userId, int balance);
 }

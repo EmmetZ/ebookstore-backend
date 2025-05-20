@@ -27,14 +27,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User validateLogin(String username, String password) {
         // 根据用户名查找用户
-        User user = userDAO.getUserByUsername(username);
+        User user = userDAO.findByUsername(username);
 
         if (user == null) {
             return null;
         }
 
         // 获取用户认证信息
-        UserAuth userAuth = userDAO.getUserAuthByUserId(user.getId());
+        UserAuth userAuth = userDAO.findUserAuthById(user.getId());
 
         if (userAuth == null) {
             return null;
@@ -49,14 +49,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long userId) {
-        return userDAO.getUserById(userId);
+    public User findUserById(Long userId) {
+        return userDAO.findById(userId);
     }
 
     @Override
     public UserDTO getMe(Long userId) {
         if (userId != null) {
-            User user = userDAO.getUserById(userId);
+            User user = userDAO.findById(userId);
             if (user != null) {
                 return UserDTO.fromUser(user);
             }

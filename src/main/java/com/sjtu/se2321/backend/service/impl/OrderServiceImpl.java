@@ -73,6 +73,6 @@ public class OrderServiceImpl implements OrderService {
             bookDAO.updateBookSales(cartItem.getBookId(), cartItem.getNumber());
             cost += cartItem.getNumber() * bookDAO.findById(cartItem.getBookId()).getPrice();
         }
-        userDAO.updateUserBalance(userId, -cost);
+        userDAO.updateBalance(userId, -cost);
     }
 }

@@ -19,22 +19,22 @@ public class UserDAOImpl implements UserDAO {
     private UserAuthRepository userAuthRepository;
 
     @Override
-    public User getUserByUsername(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow();
     }
 
     @Override
-    public UserAuth getUserAuthByUserId(Long userId) {
-        return userAuthRepository.findByUserId(userId);
+    public UserAuth findUserAuthById(Long userId) {
+        return userAuthRepository.findById(userId).orElseThrow();
     }
 
     @Override
-    public void updateUserBalance(Long userId, int balance) {
-        userRepository.updateUserBalance(userId, balance);
+    public void updateBalance(Long userId, int balance) {
+        userRepository.updateBalance(userId, balance);
     }
 }

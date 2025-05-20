@@ -20,7 +20,7 @@ public interface UserService {
     /**
      * 通过ID获取用户信息
      */
-    public User getUserById(Long userId);
+    public User findUserById(Long userId);
 
     // 获取当前登录的信息
     public UserDTO getMe(Long userId);
