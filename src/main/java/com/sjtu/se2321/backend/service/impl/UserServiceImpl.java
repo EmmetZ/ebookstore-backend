@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    public List<AddressDTO> getUserAddress(Long userId) {
+    public List<AddressDTO> findAllAddressByUserId(Long userId) {
         List<Address> addressList = addressDAO.findAllByUserId(userId);
         List<AddressDTO> result = new ArrayList<>();
         for (Address addr : addressList) {

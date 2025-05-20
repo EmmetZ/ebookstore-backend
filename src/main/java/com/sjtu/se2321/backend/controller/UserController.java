@@ -32,10 +32,10 @@ public class UserController {
     }
 
     @GetMapping("/api/user/me/addresses")
-    public ResponseEntity<List<AddressDTO>> getMethodName(HttpServletRequest request) {
+    public ResponseEntity<List<AddressDTO>> getUserAddress(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
-        List<AddressDTO> addresses = userService.getUserAddress(userId);
+        List<AddressDTO> addresses = userService.findAllAddressByUserId(userId);
         return ResponseEntity.ok(addresses);
     }
 }

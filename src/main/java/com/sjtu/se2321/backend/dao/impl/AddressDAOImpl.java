@@ -17,7 +17,7 @@ public class AddressDAOImpl implements AddressDAO {
 
     @Override
     public Address findById(Long id) {
-        return addressRepository.findById(id);
+        return addressRepository.findById(id).orElseThrow();
     }
 
     @Override

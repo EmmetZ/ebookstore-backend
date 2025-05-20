@@ -26,5 +26,5 @@ public interface UserService {
     public UserDTO getMe(Long userId);
 
     // 获取用户地址信息
-    public List<AddressDTO> getUserAddress(Long userId);
+    public List<AddressDTO> findAllAddressByUserId(Long userId);
 }
