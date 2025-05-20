@@ -28,30 +28,22 @@ public class CommentController {
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "createdTime") String sort) {
-        return ResponseEntity.ok(commentService.getBookComments(id, pageSize, pageIndex, sort));
+        return ResponseEntity.ok(commentService.findAllByBookId(id, pageSize, pageIndex, sort));
     }
 
     @PutMapping("/api/comment/{id}/like")
     public ResponseEntity<Result<Void>> likeComment(@PathVariable Long id, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
-        boolean status = commentService.likeComment(userId, id);
-        if (status) {
-            return ResponseEntity.ok(Result.success("点赞成功"));
-        } else {
-            return ResponseEntity.ok(Result.error("点赞失败"));
-        }
+        commentService.likeComment(userId, id);
+        return ResponseEntity.ok(Result.success("点赞成功"));
     }
 
     @PutMapping("/api/comment/{id}/unlike")
     public ResponseEntity<Result<Void>> unlikeComment(@PathVariable Long id, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
-        boolean status = commentService.unlikeComment(userId, id);
-        if (status) {
-            return ResponseEntity.ok(Result.success("取消点赞成功"));
-        } else {
-            return ResponseEntity.ok(Result.error("取消点赞失败"));
-        }
+        commentService.dislikeComment(userId, id);
+        return ResponseEntity.ok(Result.success("取消点赞成功"));
     }
 }

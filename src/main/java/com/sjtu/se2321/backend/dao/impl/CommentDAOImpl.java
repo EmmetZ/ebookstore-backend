@@ -1,12 +1,19 @@
 package com.sjtu.se2321.backend.dao.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.sjtu.se2321.backend.dao.CommentDAO;
 import com.sjtu.se2321.backend.entity.Comment;
+import com.sjtu.se2321.backend.entity.CommentLike;
+import com.sjtu.se2321.backend.entity.CommentLikeId;
+import com.sjtu.se2321.backend.repository.CommentLikeRepository;
 import com.sjtu.se2321.backend.repository.CommentRepository;
 
 @Component
@@ -15,33 +22,43 @@ public class CommentDAOImpl implements CommentDAO {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private CommentLikeRepository commentLikeRepository;
+
     @Override
-    public List<Comment> findBookComments(Long bookId, int limit, int offset, String sort) {
-        return commentRepository.findBookComments(bookId, limit, offset, sort);
+    public List<Comment> findAllByBookId(Long bookId, int limit, int offset, String sort) {
+        Pageable pageable;
+        if (sort.equals("createdTime")) {
+            pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        } else {
+            pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "like"));
+        }
+        return commentRepository.findAllByBookId(bookId, pageable);
     }
 
     @Override
     public Boolean getLikedStatus(Long userId, Long commentId) {
-        return commentRepository.getLikedStatus(userId, commentId);
+        Optional<CommentLike> res = commentLikeRepository.findById(new CommentLikeId(userId, commentId));
+        return res.isPresent();
     }
 
     @Override
-    public Integer countBookComments(Long bookId) {
-        return commentRepository.countBookComments(bookId);
+    public Integer countByBookId(Long bookId) {
+        return commentRepository.countByBookId(bookId);
     }
 
     @Override
-    public boolean likeComment(Long userId, Long commentId) {
-        return commentRepository.likeComment(userId, commentId);
+    public void likeComment(Long userId, Long commentId) {
+        commentLikeRepository.save(new CommentLike(userId, commentId));
     }
 
     @Override
-    public boolean unlikeComment(Long userId, Long commentId) {
-        return commentRepository.unlikeComment(userId, commentId);
+    public void dislikeComment(Long userId, Long commentId) {
+        commentLikeRepository.delete(new CommentLike(userId, commentId));
     }
 
     @Override
-    public boolean updateComment(Long commentId, int like) {
-        return commentRepository.updateComment(commentId, like);
+    public void updateComment(Long id, int like) {
+        commentRepository.updateLike(id, like);
     }
 }

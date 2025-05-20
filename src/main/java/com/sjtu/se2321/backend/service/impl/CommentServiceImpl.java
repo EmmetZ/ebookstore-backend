@@ -25,10 +25,10 @@ public class CommentServiceImpl implements CommentService {
     private UserDAO userDAO;
 
     @Override
-    public PageResult<CommentDTO> getBookComments(Long bookId, int pageSize, int pageIndex, String sort) {
+    public PageResult<CommentDTO> findAllByBookId(Long bookId, int pageSize, int pageIndex, String sort) {
         int limit = pageSize;
         int offset = pageIndex * pageSize;
-        List<Comment> comments = commentDAO.findBookComments(bookId, limit, offset, sort);
+        List<Comment> comments = commentDAO.findAllByBookId(bookId, limit, offset, sort);
         List<CommentDTO> commentDTOs = new ArrayList<>();
         User user = null;
 
@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
             }
             Boolean liked = commentDAO.getLikedStatus(user.getId(), commentId);
             String reply = null;
-            if (comment.getReplyId() != 0) {
+            if (comment.getReplyId() != null) {
                 reply = userDAO.findById(comment.getReplyId()).getUsername();
             }
 
@@ -57,31 +57,23 @@ public class CommentServiceImpl implements CommentService {
 
             commentDTOs.add(commentDTO);
         }
-        int num = commentDAO.countBookComments(bookId);
+        int num = commentDAO.countByBookId(bookId);
         int total = (int) Math.ceil((double) num / limit);
         return new PageResult<>(total, commentDTOs);
     }
 
     @Override
     @Transactional
-    public boolean likeComment(Long userId, Long commentId) {
-        boolean liked = commentDAO.likeComment(userId, commentId);
-        if (liked) {
-            boolean status = commentDAO.updateComment(commentId, 1);
-            return status;
-        }
-        return false;
+    public void likeComment(Long userId, Long commentId) {
+        commentDAO.likeComment(userId, commentId);
+        commentDAO.updateComment(commentId, 1);
     }
 
     @Override
     @Transactional
-    public boolean unlikeComment(Long userId, Long commentId) {
-        boolean liked = commentDAO.unlikeComment(userId, commentId);
-        if (liked) {
-            boolean status = commentDAO.updateComment(commentId, -1);
-            return status;
-        }
-        return false;
+    public void dislikeComment(Long userId, Long commentId) {
+        commentDAO.dislikeComment(userId, commentId);
+        commentDAO.updateComment(commentId, -1);
     }
 
 }

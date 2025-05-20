@@ -5,9 +5,9 @@ import com.sjtu.se2321.backend.dto.PageResult;
 
 public interface CommentService {
 
-    public PageResult<CommentDTO> getBookComments(Long bookId, int pageSize, int pageIndex, String sort);
+    public PageResult<CommentDTO> findAllByBookId(Long bookId, int pageSize, int pageIndex, String sort);
 
-    public boolean likeComment(Long userId, Long commentId);
+    public void likeComment(Long userId, Long commentId);
 
-    public boolean unlikeComment(Long userId, Long commentId);
+    public void dislikeComment(Long userId, Long commentId);
 }

@@ -6,24 +6,15 @@ import com.sjtu.se2321.backend.entity.Comment;
 
 public interface CommentDAO {
 
-    public List<Comment> findBookComments(Long bookId, int limit, int offset, String sort);
+    public List<Comment> findAllByBookId(Long bookId, int limit, int offset, String sort);
 
     public Boolean getLikedStatus(Long userId, Long commentId);
 
-    public Integer countBookComments(Long bookId);
+    public Integer countByBookId(Long bookId);
 
-    public boolean likeComment(Long userId, Long commentId);
+    public void likeComment(Long userId, Long commentId);
 
-    public boolean unlikeComment(Long userId, Long commentId);
+    public void dislikeComment(Long userId, Long commentId);
 
-    public boolean updateComment(Long commentId, int like);
+    public void updateComment(Long id, int like);
 }
-
-
-
-
-
-
-
-
-
