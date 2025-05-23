@@ -1,5 +1,6 @@
 package com.sjtu.se2321.backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,4 +21,7 @@ public class User {
     private String balance;
     private String introduction;
     private String avatar;
+
+    @Column(name = "admin")
+    private Integer isAdmin;
 }

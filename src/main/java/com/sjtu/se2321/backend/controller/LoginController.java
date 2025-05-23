@@ -1,5 +1,7 @@
 package com.sjtu.se2321.backend.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.service.UserService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
@@ -23,9 +26,14 @@ public class LoginController {
     private UserService userService;
 
     @PostMapping("/api/login")
-    public ResponseEntity<Result<Void>> login(@RequestBody LoginBody body, HttpServletResponse response,
+    public ResponseEntity<Result<?>> login(
+            @RequestBody LoginBody body,
+            HttpServletRequest request,
+            HttpServletResponse response,
             HttpSession session) {
         System.out.println("Login attempt: " + body);
+
+        session = request.getSession(true);
 
         // 验证用户名和密码
         User user = userService.validateLogin(body.getUsername(), body.getPassword());
@@ -44,7 +52,9 @@ public class LoginController {
         sessionCookie.setHttpOnly(true);
         response.addCookie(sessionCookie);
 
-        return ResponseEntity.ok(Result.success("Login successful"));
+        Map<String, Object> adminInfo = Map.of(
+                "isAdmin", user.getIsAdmin() == 1 ? true : false);
+        return ResponseEntity.ok(Result.success("Login successful", adminInfo));
     }
 
 }
