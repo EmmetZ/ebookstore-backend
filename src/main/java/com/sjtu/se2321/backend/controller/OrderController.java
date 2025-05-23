@@ -28,9 +28,6 @@ public class OrderController {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
         List<OrderDTO> orders = orderService.findAllByUserId(userId);
-        if (orders == null || orders.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(orders);
     }
 
