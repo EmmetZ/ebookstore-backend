@@ -23,7 +23,7 @@ public class LogoutController {
         session.invalidate();
 
         // 清除cookie
-    Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("JSESSIONID".equals(cookie.getName())) {

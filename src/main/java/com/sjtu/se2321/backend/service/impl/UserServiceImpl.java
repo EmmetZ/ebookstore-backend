@@ -12,7 +12,6 @@ import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.Address;
 import com.sjtu.se2321.backend.entity.User;
-import com.sjtu.se2321.backend.entity.UserAuth;
 import com.sjtu.se2321.backend.service.UserService;
 
 @Service
@@ -25,27 +24,8 @@ public class UserServiceImpl implements UserService {
     private AddressDAO addressDAO;
 
     @Override
-    public User validateLogin(String username, String password) {
-        // 根据用户名查找用户
-        User user = userDAO.findByUsername(username);
-
-        if (user == null) {
-            return null;
-        }
-
-        // 获取用户认证信息
-        UserAuth userAuth = userDAO.findUserAuthById(user.getId());
-
-        if (userAuth == null) {
-            return null;
-        }
-
-        // 验证密码是否匹配
-        if (password.equals(userAuth.getPassword())) {
-            return user;
-        }
-
-        return null;
+    public User findUserByUsername(String username) {
+        return userDAO.findByUsername(username);
     }
 
     @Override

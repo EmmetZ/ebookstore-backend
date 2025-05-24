@@ -8,14 +8,7 @@ import com.sjtu.se2321.backend.entity.User;
 
 public interface UserService {
 
-    /**
-     * 验证用户登录
-     * 
-     * @param username 用户名
-     * @param password 密码
-     * @return 登录成功返回用户信息，否则返回空
-     */
-    public User validateLogin(String username, String password);
+    public User findUserByUsername(String username);
 
     /**
      * 通过ID获取用户信息
