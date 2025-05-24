@@ -14,4 +14,5 @@ public interface BookDAO {
 
     public void updateBookSales(Long id, int sales);
 
+    public void save(Book book);
 }

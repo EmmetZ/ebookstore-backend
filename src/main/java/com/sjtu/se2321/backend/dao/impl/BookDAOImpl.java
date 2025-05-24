@@ -35,11 +35,18 @@ public class BookDAOImpl implements BookDAO {
 
     @Override
     public Book findById(Long id) {
-        return bookRepository.findById(id).orElseThrow();
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND, "Book not found with id: " + id));
     }
 
     @Override
     public void updateBookSales(Long id, int sales) {
         bookRepository.updateBookSale(id, sales);
+    }
+
+    @Override
+    public void save(Book book) {
+        bookRepository.save(book);
     }
 }

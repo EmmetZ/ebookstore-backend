@@ -2,11 +2,14 @@ package com.sjtu.se2321.backend.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.TagDAO;
+import com.sjtu.se2321.backend.dto.BookEditBody;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.entity.Tag;
@@ -42,10 +45,17 @@ public class BookServiceImpl implements BookService {
         return new PageResult<Book>(total, books);
     }
 
-
     @Override
     public Book findBookById(Long id) {
         return bookDAO.findById(id);
+    }
+
+    @Override
+    @Transactional
+    public void editBookInfo(Long id, BookEditBody body) {
+        Book book = bookDAO.findById(id);
+        BeanUtils.copyProperties(body, book);
+        bookDAO.save(book);
     }
 
     @Override
