@@ -27,6 +27,7 @@ public class Book {
     private String description;
     private String cover;
     private Integer sales;
+    private Integer stock;
 
     // always fetch tags eagerly
     @ManyToMany(fetch = FetchType.EAGER)
