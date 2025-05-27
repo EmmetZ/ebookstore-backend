@@ -23,8 +23,8 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public Long save(Long userId, String address, String tel, String receiver) {
-        return orderRepository.save(new Order(userId, address, tel, receiver)).getId();
+    public void save(Order order) {
+        orderRepository.save(order);
     }
 
 }

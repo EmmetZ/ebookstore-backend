@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.CartDAO;
 import com.sjtu.se2321.backend.dao.OrderDAO;
-import com.sjtu.se2321.backend.dao.OrderItemDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.dto.OrderDTO;
 import com.sjtu.se2321.backend.dto.OrderItemDTO;
@@ -27,9 +26,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderDAO orderDAO;
 
     @Autowired
-    private OrderItemDAO orderItemDAO;
-
-    @Autowired
     private BookDAO bookDAO;
 
     @Autowired
@@ -44,8 +40,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDTO> orderDTOs = new ArrayList<>();
 
         for (Order order : orders) {
-            Long orderId = order.getId();
-            List<OrderItem> orderItems = orderItemDAO.findAllByOrderId(orderId);
+            List<OrderItem> orderItems = order.getItems();
 
             OrderDTO orderDTO = new OrderDTO(order);
             for (OrderItem orderItem : orderItems) {
@@ -64,15 +59,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void placeOrder(Long userId, String address, String tel, String receiver, List<Long> itemIds) {
-        Long orderId = orderDAO.save(userId, address, tel, receiver);
+        Order order = new Order(userId, address, tel, receiver);
         int cost = 0;
         for (Long itemId : itemIds) {
             CartItem cartItem = cartDAO.findById(itemId);
-            orderItemDAO.save(orderId, cartItem.getBookId(), cartItem.getNumber());
+            OrderItem item = new OrderItem(null, cartItem.getBookId(), cartItem.getNumber());
+            order.getItems().add(item);
+
             cartDAO.delete(cartItem.getId());
             bookDAO.updateBookSales(cartItem.getBookId(), cartItem.getNumber());
             cost += cartItem.getNumber() * bookDAO.findById(cartItem.getBookId()).getPrice();
         }
+        orderDAO.save(order);
         userDAO.updateBalance(userId, -cost);
     }
 }

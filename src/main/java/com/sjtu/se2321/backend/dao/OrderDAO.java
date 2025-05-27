@@ -7,5 +7,5 @@ import com.sjtu.se2321.backend.entity.Order;
 public interface OrderDAO {
     public List<Order> findAllByUserId(Long userId);
 
-    public Long save(Long userId, String address, String tel, String receiver);
+    public void save(Order order);
 }
