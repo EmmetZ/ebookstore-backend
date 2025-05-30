@@ -1,10 +1,14 @@
 package com.sjtu.se2321.backend.entity;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,17 +22,20 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "user_id")
-    Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
+    User user;
 
-    @Column(name = "book_id")
-    Long bookId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
+    Book book;
 
     Integer number;
 
-    public CartItem(Long bookId, Long userId, Integer number) {
-        this.bookId = bookId;
-        this.userId = userId;
-        this.number = number;
+    public CartItem(Book book, User user) {
+        this.book = book;
+        this.user = user;
+        this.number = 1;
     }
 }

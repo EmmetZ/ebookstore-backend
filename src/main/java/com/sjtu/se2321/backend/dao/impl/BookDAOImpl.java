@@ -49,4 +49,9 @@ public class BookDAOImpl implements BookDAO {
     public void save(Book book) {
         bookRepository.save(book);
     }
+
+    @Override
+    public Book getReferenceById(Long id) {
+        return bookRepository.getReferenceById(id);
+    }
 }

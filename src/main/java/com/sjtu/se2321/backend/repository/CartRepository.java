@@ -2,6 +2,7 @@ package com.sjtu.se2321.backend.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,7 @@ public interface CartRepository extends JpaRepository<CartItem, Long> {
     @Query("UPDATE CartItem SET number = :number WHERE id = :id")
     public void updateCartItem(@Param("id") Long id, @Param("number") Integer number);
 
+    @EntityGraph(attributePaths = { "book" })
     public List<CartItem> findAllByUserId(Long userId);
 
 }

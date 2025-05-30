@@ -1,6 +1,7 @@
 package com.sjtu.se2321.backend.entity;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -10,7 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -36,14 +36,18 @@ public class Order {
     @Column(name = "created_at", insertable = false, updatable = false)
     private OffsetDateTime createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id")
-    private List<OrderItem> items;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
+    private List<OrderItem> items = new ArrayList<>();
 
     public Order(Long userId, String address, String tel, String receiver) {
         this.userId = userId;
         this.address = address;
         this.tel = tel;
         this.receiver = receiver;
+    }
+
+    public void addOrdetItem(OrderItem item) {
+        item.setOrder(this);
+        this.items.add(item);
     }
 }

@@ -9,7 +9,7 @@ public interface CartDAO {
 
     public void updateCartItem(Long id, Integer number);
 
-    public void save(Long bookId, Long userId);
+    public void save(CartItem cartItem);
 
     public void delete(Long id);
 

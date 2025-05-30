@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sjtu.se2321.backend.dto.CartItemDTO;
 import com.sjtu.se2321.backend.dto.Result;
+import com.sjtu.se2321.backend.entity.CartItem;
 import com.sjtu.se2321.backend.service.CartService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ public class CartController {
     private CartService cartService;
 
     @GetMapping("/api/cart")
-    public ResponseEntity<List<CartItemDTO>> getCartItemsByUserId(HttpServletRequest request) {
+    public ResponseEntity<List<CartItem>> getCartItemsByUserId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
         return ResponseEntity.ok(cartService.findAllByUserId(userId));

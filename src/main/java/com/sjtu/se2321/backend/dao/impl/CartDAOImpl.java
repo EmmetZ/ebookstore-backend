@@ -26,8 +26,8 @@ public class CartDAOImpl implements CartDAO {
     }
 
     @Override
-    public void save(Long bookId, Long userId) {
-        cartRepository.save(new CartItem(bookId, userId, 1));
+    public void save(CartItem cartItem) {
+        cartRepository.save(cartItem);
     }
 
     @Override
