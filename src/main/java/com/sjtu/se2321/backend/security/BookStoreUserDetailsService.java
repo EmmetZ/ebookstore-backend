@@ -45,7 +45,7 @@ public class BookStoreUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        if (user.getIsAdmin() == 1) {
+        if (user.getRole() == User.Role.ADMIN) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 

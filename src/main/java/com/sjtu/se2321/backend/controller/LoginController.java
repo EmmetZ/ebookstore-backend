@@ -71,12 +71,11 @@ public class LoginController {
             sessionCookie.setHttpOnly(true);
             response.addCookie(sessionCookie);
 
-            Map<String, Object> adminInfo = Map.of(
-                    "isAdmin", user.getIsAdmin() == 1 ? true : false);
+            Map<String, Object> adminInfo = Map.of("role", user.getRole());
             return ResponseEntity.ok(Result.success("Login successful", adminInfo));
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.OK).body(Result.error("failed to login, unknown error"));
+            return ResponseEntity.status(HttpStatus.OK).body(Result.error("login error: " + e.getMessage()));
         }
     }
 
