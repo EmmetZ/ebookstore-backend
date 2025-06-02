@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
             commentDTO.setId(commentId);
             commentDTO.setUserId(user.getId());
             commentDTO.setUsername(user.getUsername());
-            commentDTO.setAvatar(user.getAvatar());
+            commentDTO.setAvatar(user.getAvatar().getFileName());
             commentDTO.setContent(comment.getContent());
             commentDTO.setLike(comment.getLike());
             commentDTO.setLiked(liked);

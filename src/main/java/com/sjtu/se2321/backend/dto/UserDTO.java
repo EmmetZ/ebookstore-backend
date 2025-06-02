@@ -21,7 +21,7 @@ public class UserDTO {
                 user.getNickname(),
                 user.getBalance(),
                 user.getIntroduction(),
-                user.getAvatar(),
+                user.getAvatar().getFileName(),
                 user.getRole());
     }
 }
