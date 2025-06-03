@@ -21,3 +21,4 @@ spring:
 
 file:
     upload-avatar-dir: ./uploads/avatar
+    upload-cover-dir: ./uploads/cover

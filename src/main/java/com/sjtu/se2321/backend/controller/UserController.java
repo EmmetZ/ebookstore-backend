@@ -12,7 +12,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sjtu.se2321.backend.Utils;
 import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.dto.UserDTO;
@@ -70,7 +70,7 @@ public class UserController {
 
         Path uploadPath = Paths.get(uploadDir);
 
-        String fileName = "u-" + UUID.randomUUID().toString() + "."
+        String fileName = UUID.randomUUID().toString() + "."
                 + FilenameUtils.getExtension(file.getOriginalFilename());
         Path filePath = uploadPath.resolve(fileName);
         String preAvatar;
@@ -90,8 +90,10 @@ public class UserController {
             imageService.save(avatar);
 
             // delete previous avatar image file
-            Path prePath = uploadPath.resolve(preAvatar);
-            Files.deleteIfExists(prePath);
+            if (preAvatar != null) {
+                Path prePath = uploadPath.resolve(preAvatar);
+                Files.deleteIfExists(prePath);
+            }
             return ResponseEntity.ok(Result.success("上传成功")); // 返回图片URL给前端
         } catch (Exception e) {
             // if file is saved, delete it
@@ -102,18 +104,7 @@ public class UserController {
 
     @GetMapping("/api/user/avatars/{fileName}")
     public ResponseEntity<Resource> getAvatar(@PathVariable String fileName) throws IOException {
-        Path filePath = Paths.get(uploadDir).resolve(fileName);
-
-        Resource resource = new UrlResource(filePath.toUri());
-
-        if (resource.exists() && resource.isReadable()) {
-            String contentType = Files.probeContentType(filePath);
-            return ResponseEntity.ok()
-                    .header("Content-Type", contentType)
-                    .body(resource);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return Utils.getImageResource(uploadDir, fileName);
     }
 
 }

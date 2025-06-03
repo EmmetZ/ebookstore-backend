@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -25,7 +26,11 @@ public class Book {
     private String author;
     private Integer price;
     private String description;
-    private String cover;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cover_id", referencedColumnName = "id")
+    private Image cover;
+
     private Integer sales;
     private Integer stock;
 

@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class PageResult<T> {
-    private Integer total;
+    private int total;
     private List<T> items;
 }

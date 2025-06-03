@@ -1,14 +1,17 @@
 package com.sjtu.se2321.backend.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.TagDAO;
+import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookEditBody;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.entity.Book;
@@ -25,7 +28,7 @@ public class BookServiceImpl implements BookService {
     private TagDAO tagDAO;
 
     @Override
-    public PageResult<Book> findBookByKeywordAndTag(int limit, int offset, String tagName, String keyword) {
+    public PageResult<BookDTO> findBookByKeywordAndTag(int limit, int offset, String tagName, String keyword) {
         // tag:
         // tagId = -1 : tag is null, search all books
         // tagId = 0 : tag is not found in db
@@ -39,10 +42,12 @@ public class BookServiceImpl implements BookService {
                 tagId = Long.valueOf(0);
             }
         }
-        List<Book> books = bookDAO.findAllByKeywordAndTag(limit, offset, tagId, keyword);
-        long num = bookDAO.countByKeywordAndTag(tagId, keyword);
-        int total = (int) Math.ceil((double) num / limit);
-        return new PageResult<Book>(total, books);
+        Page<Book> books = bookDAO.findAllByKeywordAndTag(limit, offset, tagId, keyword);
+        List<BookDTO> dtos = new ArrayList<>();
+        for (Book book : books.getContent()) {
+            dtos.add(new BookDTO(book));
+        }
+        return new PageResult<BookDTO>(books.getTotalPages(), dtos);
     }
 
     @Override

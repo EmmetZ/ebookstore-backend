@@ -1,14 +1,12 @@
 package com.sjtu.se2321.backend.dao;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import com.sjtu.se2321.backend.entity.Book;
 
 public interface BookDAO {
 
-    public List<Book> findAllByKeywordAndTag(int limit, int offset, Long tagId, String keyword);
-
-    public Long countByKeywordAndTag(Long tagId, String keyword);
+    public Page<Book> findAllByKeywordAndTag(int limit, int offset, Long tagId, String keyword);
 
     public Book findById(Long id);
 

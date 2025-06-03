@@ -1,8 +1,7 @@
 package com.sjtu.se2321.backend.dao.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,16 +20,10 @@ public class BookDAOImpl implements BookDAO {
     private BookRepository bookRepository;
 
     @Override
-    public List<Book> findAllByKeywordAndTag(int limit, int offset, Long tagId, String keyword) {
+    public Page<Book> findAllByKeywordAndTag(int limit, int offset, Long tagId, String keyword) {
         Pageable pageable = PageRequest.of(offset / limit, limit, Sort.by("id").ascending());
         Specification<Book> spec = BookSpecifications.withFilters(tagId, keyword);
-        return bookRepository.findAll(spec, pageable).getContent();
-    }
-
-    @Override
-    public Long countByKeywordAndTag(Long tagId, String keyword) {
-        Specification<Book> spec = BookSpecifications.withFilters(tagId, keyword);
-        return bookRepository.count(spec);
+        return bookRepository.findAll(spec, pageable);
     }
 
     @Override
