@@ -4,6 +4,8 @@ import com.sjtu.se2321.backend.entity.Image;
 
 public interface ImageDAO {
 
-    public void save(Image image);
+    public Image save(Image image);
+
+    public Image getReferenceById(Long id);
 
 }

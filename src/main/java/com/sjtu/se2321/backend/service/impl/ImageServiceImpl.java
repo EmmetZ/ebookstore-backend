@@ -17,8 +17,13 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void save(Image image) {
-        imageDAO.save(image);
+    public Image save(Image image) {
+        return imageDAO.save(image);
+    }
+
+    @Override
+    public Image getReferenceById(Long id) {
+        return imageDAO.getReferenceById(id);
     }
 
 }

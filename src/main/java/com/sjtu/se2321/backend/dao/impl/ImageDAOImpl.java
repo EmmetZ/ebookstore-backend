@@ -14,8 +14,13 @@ public class ImageDAOImpl implements ImageDAO {
     private ImageRepository imageRepository;
 
     @Override
-    public void save(Image image) {
-        imageRepository.save(image);
+    public Image save(Image image) {
+        return imageRepository.save(image);
+    }
+
+    @Override
+    public Image getReferenceById(Long id) {
+        return imageRepository.getReferenceById(id);
     }
 
 }

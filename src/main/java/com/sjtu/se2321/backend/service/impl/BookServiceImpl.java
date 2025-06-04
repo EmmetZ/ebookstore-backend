@@ -64,6 +64,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
+    public void save(Book book) {
+        bookDAO.save(book);
+    }
+
+    @Override
     public List<String> findAllTags() {
         return tagDAO.findAll().stream()
                 .map(tag -> tag.getName())

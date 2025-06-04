@@ -2,6 +2,8 @@ package com.sjtu.se2321.backend.entity;
 
 import java.util.Set;
 
+import com.sjtu.se2321.backend.dto.BookAddBody;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -13,10 +15,12 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "Book")
+@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +42,13 @@ public class Book {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "BookTag", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
+
+    public Book(BookAddBody body) {
+        this.author = body.getAuthor();
+        this.description = body.getDescription();
+        this.price = body.getPrice();
+        this.stock = body.getStock();
+        this.title = body.getTitle();
+        this.sales = 0;
+    }
 }

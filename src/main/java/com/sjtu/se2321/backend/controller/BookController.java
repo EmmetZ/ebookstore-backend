@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sjtu.se2321.backend.Utils;
+import com.sjtu.se2321.backend.dto.BookAddBody;
 import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookEditBody;
 import com.sjtu.se2321.backend.dto.BookReqParam;
@@ -79,7 +81,7 @@ public class BookController {
 
     @PostMapping("/api/book/{id}/cover")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Result<Void>> uploadCover(@PathVariable Long id, @RequestParam MultipartFile file)
+    public ResponseEntity<Result<?>> uploadCover(@PathVariable Long id, @RequestParam MultipartFile file)
             throws IOException {
 
         Path uploadPath = Paths.get(uploadDir);
@@ -96,18 +98,28 @@ public class BookController {
             // 保存封面图片
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            // save to Image table
-            Image cover = bookService.findBookById(id).getCover();
-            preCover = cover.getFileName();
-            cover.setFileName(fileName);
-            imageService.save(cover);
+            if (id != 0) {
+                // save to Image table
+                Image cover = bookService.findBookById(id).getCover();
+                preCover = cover.getFileName();
+                cover.setFileName(fileName);
+                imageService.save(cover);
 
-            // delete previous cover
-            if (preCover != null) {
-                Path prePath = uploadPath.resolve(preCover);
-                Files.deleteIfExists(prePath);
+                // delete previous cover
+                if (preCover != null) {
+                    Path prePath = uploadPath.resolve(preCover);
+                    Files.deleteIfExists(prePath);
+                }
+                return ResponseEntity.ok(Result.success("上传成功")); // 返回图片URL给前端
+            } else {
+                Image image = new Image(fileName);
+                Image imageSaved = imageService.save(image);
+
+                HashMap<String, Object> info = new HashMap<>();
+                info.put("id", imageSaved.getId());
+                info.put("fileName", fileName);
+                return ResponseEntity.ok(Result.success("上传成功", info));
             }
-            return ResponseEntity.ok(Result.success("上传成功")); // 返回图片URL给前端
         } catch (Exception e) {
             // if file is saved, delete it
             Files.deleteIfExists(filePath);
@@ -118,6 +130,22 @@ public class BookController {
     @GetMapping("/api/book/covers/{fileName}")
     public ResponseEntity<Resource> getCover(@PathVariable String fileName) throws IOException {
         return Utils.getImageResource(uploadDir, fileName);
+    }
+
+    @PostMapping("/api/book")
+    public ResponseEntity<Result<Void>> addBook(@RequestBody BookAddBody body) {
+        Book book = new Book(body);
+        if (body.getCoverId() != 0) {
+            Image image = imageService.getReferenceById(body.getCoverId());
+            book.setCover(image);
+        } else {
+            Image image = new Image();
+            image.setFileName("default_cover.jpg");
+            image = imageService.save(image);
+            book.setCover(image);
+        }
+        bookService.save(book);
+        return ResponseEntity.ok(Result.success("添加书籍成功"));
     }
 
 }
