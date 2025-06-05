@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.entity.User;
-import com.sjtu.se2321.backend.entity.UserAuth;
 
 @Service
 public class BookStoreUserDetailsService implements UserDetailsService {
@@ -31,14 +30,8 @@ public class BookStoreUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
 
-        UserAuth userAuth = userDAO.findUserAuthById(user.getId());
-
-        if (userAuth == null) {
-            throw new UsernameNotFoundException("User authentication not found");
-        }
-
         return new org.springframework.security.core.userdetails.User(
-                username, userAuth.getPassword(), getAuthority(user));
+                username, user.getUserAuth().getPassword(), getAuthority(user));
     }
 
     private Collection<? extends GrantedAuthority> getAuthority(User user) {

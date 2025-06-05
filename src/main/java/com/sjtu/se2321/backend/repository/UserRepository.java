@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "UPDATE User SET balance = balance + :balance WHERE id = :userId", nativeQuery = true)
     public void updateBalance(@Param("userId") Long userId, @Param("balance") int balance);
 
+    public User findByEmail(String email);
+
 }

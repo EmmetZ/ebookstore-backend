@@ -42,4 +42,14 @@ public class UserDAOImpl implements UserDAO {
     public User getReferenceById(Long id) {
         return userRepository.getReferenceById(id);
     }
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

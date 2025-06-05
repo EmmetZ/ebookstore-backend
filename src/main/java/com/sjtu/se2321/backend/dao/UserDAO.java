@@ -14,4 +14,9 @@ public interface UserDAO {
     public void updateBalance(Long userId, int balance);
 
     public User getReferenceById(Long id);
+
+    public void save(User user);
+
+    public User findByEmail(String email);
+
 }

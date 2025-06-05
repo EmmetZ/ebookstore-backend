@@ -1,7 +1,9 @@
 package com.sjtu.se2321.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sjtu.se2321.backend.converter.RoleConverter;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -24,12 +26,13 @@ public class User {
 
     private String username;
     private String nickname;
-    private String balance;
+    private Integer balance;
     private String introduction;
+    private String email;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "avatar_id", referencedColumnName = "id")
-    private Image avatar;
+    private Avatar avatar;
 
     public enum Role {
         USER("user"), ADMIN("admin");
@@ -57,4 +60,13 @@ public class User {
     @Column(name = "role")
     @Convert(converter = RoleConverter.class)
     private Role role;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private UserAuth userAuth;
+
+    public void addUserAuth(UserAuth userAuth) {
+        this.userAuth = userAuth;
+        userAuth.setUser(this);
+    }
 }

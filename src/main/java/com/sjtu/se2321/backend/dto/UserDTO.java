@@ -10,7 +10,7 @@ import lombok.Data;
 public class UserDTO {
     private String username;
     private String nickname;
-    private String balance;
+    private Integer balance;
     private String introduction;
     private String avatar;
     private User.Role role;

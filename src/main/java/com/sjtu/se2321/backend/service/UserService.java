@@ -20,4 +20,9 @@ public interface UserService {
 
     // 获取用户地址信息
     public List<AddressDTO> findAllAddressByUserId(Long userId);
+
+    public void save(User user);
+
+    public User findByEmail(String email);
+
 }

@@ -14,6 +14,8 @@ import com.sjtu.se2321.backend.entity.Address;
 import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.service.UserService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -51,6 +53,17 @@ public class UserServiceImpl implements UserService {
             result.add(new AddressDTO(addr));
         }
         return result;
+    }
+
+    @Override
+    @Transactional
+    public void save(User user) {
+        userDAO.save(user);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userDAO.findByEmail(email);
     }
 
 }

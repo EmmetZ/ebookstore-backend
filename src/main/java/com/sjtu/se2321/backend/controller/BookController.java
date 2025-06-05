@@ -32,6 +32,7 @@ import com.sjtu.se2321.backend.dto.BookReqParam;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.entity.Book;
+import com.sjtu.se2321.backend.entity.BookCover;
 import com.sjtu.se2321.backend.entity.Image;
 import com.sjtu.se2321.backend.service.BookService;
 import com.sjtu.se2321.backend.service.ImageService;
@@ -112,7 +113,7 @@ public class BookController {
                 }
                 return ResponseEntity.ok(Result.success("上传成功")); // 返回图片URL给前端
             } else {
-                Image image = new Image(fileName);
+                Image image = new BookCover(fileName);
                 Image imageSaved = imageService.save(image);
 
                 HashMap<String, Object> info = new HashMap<>();

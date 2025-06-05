@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/login", "/api/logout").permitAll()
+                                .requestMatchers("/api/login", "/api/logout", "/api/register").permitAll()
                                 .requestMatchers("/api/**").hasRole("USER")
                                 .anyRequest().hasRole("USER"))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
