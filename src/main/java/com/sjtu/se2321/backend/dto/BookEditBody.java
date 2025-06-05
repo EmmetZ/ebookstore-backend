@@ -1,5 +1,7 @@
 package com.sjtu.se2321.backend.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -9,4 +11,5 @@ public class BookEditBody {
     private Integer price;
     private String description;
     private Integer stock;
+    private List<String> tags;
 }

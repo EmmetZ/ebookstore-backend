@@ -14,7 +14,7 @@ public interface BookService {
 
     public void editBookInfo(Long id, BookEditBody body);
 
-    public void save(Book book);
+    public void save(Book book, List<String> tagNames);
 
     // tag
     public List<String> findAllTags();

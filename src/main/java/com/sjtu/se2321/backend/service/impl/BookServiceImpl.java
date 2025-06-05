@@ -1,7 +1,9 @@
 package com.sjtu.se2321.backend.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,13 +61,21 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public void editBookInfo(Long id, BookEditBody body) {
         Book book = bookDAO.findById(id);
-        BeanUtils.copyProperties(body, book);
-        bookDAO.save(book);
+        BeanUtils.copyProperties(body, book, "tags");
+        save(book, body.getTags());
     }
 
     @Override
     @Transactional
-    public void save(Book book) {
+    public void save(Book book, List<String> tagNames) {
+        Set<Tag> tags = new HashSet<>();
+        if (tagNames != null && !tagNames.isEmpty()) {
+            for (String tagName : tagNames) {
+                Tag tag = tagDAO.findByName(tagName);
+                tags.add(tag);
+            }
+        }
+        book.setTags(tags);
         bookDAO.save(book);
     }
 

@@ -144,7 +144,7 @@ public class BookController {
             image = imageService.save(image);
             book.setCover(image);
         }
-        bookService.save(book);
+        bookService.save(book, body.getTags());
         return ResponseEntity.ok(Result.success("添加书籍成功"));
     }
 
