@@ -59,4 +59,15 @@ public class CommentController {
         return ResponseEntity.ok(Result.success("发布评论成功"));
     }
 
+    @PostMapping("/api/comment/{id}")
+    public ResponseEntity<Result<Void>> reply(
+            HttpServletRequest request,
+            @PathVariable Long id,
+            @RequestBody CommentReqBody body) {
+
+        Long userId = Utils.getUserId(request);
+        commentService.reply(userId, id, body.getContent());
+        return ResponseEntity.ok(Result.success("回复评论成功"));
+    }
+
 }

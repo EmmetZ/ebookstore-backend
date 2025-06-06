@@ -69,6 +69,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void save(Long userId, Long bookId, String content) {
         Book book = bookDAO.getReferenceById(bookId);
         User user = userDAO.getReferenceById(userId);
@@ -78,5 +79,19 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(content);
         comment.setLike(0);
         commentDAO.save(comment);
+    }
+
+    @Override
+    @Transactional
+    public void reply(Long userId, Long commentId, String content) {
+        User user = userDAO.getReferenceById(userId);
+        Comment comment = commentDAO.findById(commentId);
+        Comment reply = new Comment();
+        reply.setBook(comment.getBook());
+        reply.setUser(user);
+        reply.setContent(content);
+        reply.setLike(0);
+        reply.setReply(comment);
+        commentDAO.save(reply);
     }
 }

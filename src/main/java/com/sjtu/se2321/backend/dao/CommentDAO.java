@@ -18,4 +18,6 @@ public interface CommentDAO {
     public void updateComment(Long id, int like);
 
     public void save(Comment comment);
+
+    public Comment findById(Long id);
 }

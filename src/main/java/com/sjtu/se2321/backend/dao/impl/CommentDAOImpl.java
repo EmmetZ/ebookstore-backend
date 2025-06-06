@@ -53,4 +53,9 @@ public class CommentDAOImpl implements CommentDAO {
     public void save(Comment comment) {
         commentRepository.save(comment);
     }
+
+    @Override
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElseThrow();
+    }
 }

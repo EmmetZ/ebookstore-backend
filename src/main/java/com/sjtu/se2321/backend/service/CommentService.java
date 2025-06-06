@@ -12,4 +12,6 @@ public interface CommentService {
     public void dislikeComment(Long userId, Long commentId);
 
     public void save(Long userId, Long bookId, String content);
+
+    public void reply(Long userId, Long commentId, String content);
 }
