@@ -22,4 +22,9 @@ public class AddressDAOImpl implements AddressDAO {
     public void save(Address addr) {
         addressRepository.save(addr);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        addressRepository.deleteById(id);
+    }
 }

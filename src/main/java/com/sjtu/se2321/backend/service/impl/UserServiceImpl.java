@@ -86,4 +86,9 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
+    @Override
+    @Transactional
+    public void deleteAddressById(Long id) {
+        addressDAO.deleteById(id);
+    }
 }

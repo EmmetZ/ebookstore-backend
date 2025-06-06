@@ -30,4 +30,6 @@ public interface UserService {
     public void saveAddress(Long userId, AddrReqBody body);
 
     public OtherUserDTO findOtherUserById(Long userId);
+
+    public void deleteAddressById(Long id);
 }

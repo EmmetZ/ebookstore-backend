@@ -6,4 +6,6 @@ public interface AddressDAO {
     public Address findById(Long id);
 
     public void save(Address addr);
+
+    public void deleteById(Long id);
 }

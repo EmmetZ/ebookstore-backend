@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -113,6 +114,12 @@ public class UserController {
         Long userId = Utils.getUserId(request);
         userService.saveAddress(userId, body);
         return ResponseEntity.ok(Result.success("添加地址成功"));
+    }
+
+    @DeleteMapping("/api/user/me/addresses/{id}")
+    public ResponseEntity<Result<Void>> deleteAddress(@PathVariable Long id) {
+        userService.deleteAddressById(id);
+        return ResponseEntity.ok(Result.success("删除地址成功"));
     }
 
     @GetMapping("/api/user/{id}")
