@@ -21,11 +21,6 @@ public class CartDAOImpl implements CartDAO {
     }
 
     @Override
-    public void updateCartItem(Long id, Integer number) {
-        cartRepository.updateCartItem(id, number);
-    }
-
-    @Override
     public void save(CartItem cartItem) {
         cartRepository.save(cartItem);
     }

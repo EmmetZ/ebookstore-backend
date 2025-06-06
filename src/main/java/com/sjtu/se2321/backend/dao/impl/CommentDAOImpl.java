@@ -45,11 +45,6 @@ public class CommentDAOImpl implements CommentDAO {
     }
 
     @Override
-    public void updateComment(Long id, int like) {
-        commentRepository.updateLike(id, like);
-    }
-
-    @Override
     public void save(Comment comment) {
         commentRepository.save(comment);
     }

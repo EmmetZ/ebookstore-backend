@@ -58,14 +58,18 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void likeComment(Long userId, Long commentId) {
         commentDAO.likeComment(userId, commentId);
-        commentDAO.updateComment(commentId, 1);
+        Comment comment = commentDAO.findById(commentId);
+        comment.setLike(comment.getLike() + 1);
+        commentDAO.save(comment);
     }
 
     @Override
     @Transactional
     public void dislikeComment(Long userId, Long commentId) {
         commentDAO.dislikeComment(userId, commentId);
-        commentDAO.updateComment(commentId, -1);
+        Comment comment = commentDAO.findById(commentId);
+        comment.setLike(comment.getLike() - 1);
+        commentDAO.save(comment);
     }
 
     @Override

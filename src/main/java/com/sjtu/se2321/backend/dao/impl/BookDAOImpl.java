@@ -34,11 +34,6 @@ public class BookDAOImpl implements BookDAO {
     }
 
     @Override
-    public void updateBookSales(Long id, int sales) {
-        bookRepository.updateBookSale(id, sales);
-    }
-
-    @Override
     public void save(Book book) {
         bookRepository.save(book);
     }

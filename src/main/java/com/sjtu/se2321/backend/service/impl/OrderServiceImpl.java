@@ -18,6 +18,7 @@ import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.entity.CartItem;
 import com.sjtu.se2321.backend.entity.Order;
 import com.sjtu.se2321.backend.entity.OrderItem;
+import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.service.OrderService;
 
 @Service
@@ -67,10 +68,15 @@ public class OrderServiceImpl implements OrderService {
             order.addOrdetItem(item);
 
             cartDAO.delete(cartItem.getId());
-            bookDAO.updateBookSales(cartItem.getBook().getId(), cartItem.getNumber());
+            Book book = cartItem.getBook();
+            book.setSales(book.getSales() + cartItem.getNumber());
+            book.setStock(book.getStock() - cartItem.getNumber());
+            bookDAO.save(book);
             cost += cartItem.getNumber() * bookDAO.findById(cartItem.getBook().getId()).getPrice();
         }
         orderDAO.save(order);
-        userDAO.updateBalance(userId, -cost);
+        User user = userDAO.findById(userId);
+        user.setBalance(user.getBalance() - cost);
+        userDAO.save(user);
     }
 }

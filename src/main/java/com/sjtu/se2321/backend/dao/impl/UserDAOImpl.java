@@ -34,11 +34,6 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateBalance(Long userId, int balance) {
-        userRepository.updateBalance(userId, balance);
-    }
-
-    @Override
     public User getReferenceById(Long id) {
         return userRepository.getReferenceById(id);
     }

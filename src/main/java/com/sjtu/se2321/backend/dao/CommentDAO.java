@@ -15,8 +15,6 @@ public interface CommentDAO {
 
     public void dislikeComment(Long userId, Long commentId);
 
-    public void updateComment(Long id, int like);
-
     public void save(Comment comment);
 
     public Comment findById(Long id);

@@ -45,7 +45,9 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void updateCartItem(Long id, Integer number) {
-        cartDAO.updateCartItem(id, number);
+        CartItem item = cartDAO.findById(id);
+        item.setNumber(number);
+        cartDAO.save(item);
     }
 
     @Override
