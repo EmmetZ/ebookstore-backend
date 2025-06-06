@@ -34,4 +34,7 @@ public interface UserService {
     public void deleteAddressById(Long id);
 
     public void changePassword(Long id, String password);
+
+    public void changeIntro(Long id, String intro);
+
 }

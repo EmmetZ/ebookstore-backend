@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sjtu.se2321.backend.Utils;
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
+import com.sjtu.se2321.backend.dto.ChangeIntroBody;
 import com.sjtu.se2321.backend.dto.ChangePasswordBody;
 import com.sjtu.se2321.backend.dto.OtherUserDTO;
 import com.sjtu.se2321.backend.dto.Result;
@@ -135,6 +136,13 @@ public class UserController {
         Long id = Utils.getUserId(request);
         userService.changePassword(id, body.getPassword());
         return ResponseEntity.ok(Result.success("修改密码成功"));
+    }
+
+    @PutMapping("/api/user/me/introduction")
+    public ResponseEntity<Result<Void>> changeIntro(HttpServletRequest request, @RequestBody ChangeIntroBody body) {
+        Long id = Utils.getUserId(request);
+        userService.changeIntro(id, body.getIntroduction());
+        return ResponseEntity.ok(Result.success("修改个人简介成功"));
     }
 
 }

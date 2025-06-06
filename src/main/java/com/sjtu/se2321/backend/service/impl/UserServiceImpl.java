@@ -106,4 +106,13 @@ public class UserServiceImpl implements UserService {
         user.setUserAuth(userAuth);
         userDAO.save(user);
     }
+
+    @Override
+    @Transactional
+    public void changeIntro(Long id, String intro) {
+        User user = userDAO.findById(id);
+        user.setIntroduction(intro);
+        userDAO.save(user);
+    }
+
 }
