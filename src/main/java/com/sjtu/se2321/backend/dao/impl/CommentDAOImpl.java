@@ -1,12 +1,10 @@
 package com.sjtu.se2321.backend.dao.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.sjtu.se2321.backend.dao.CommentDAO;
@@ -26,13 +24,7 @@ public class CommentDAOImpl implements CommentDAO {
     private CommentLikeRepository commentLikeRepository;
 
     @Override
-    public List<Comment> findAllByBookId(Long bookId, int limit, int offset, String sort) {
-        Pageable pageable;
-        if (sort.equals("createdTime")) {
-            pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
-        } else {
-            pageable = PageRequest.of(offset / limit, limit, Sort.by(Sort.Direction.DESC, "like"));
-        }
+    public Page<Comment> findAllByBookId(Long bookId, Pageable pageable) {
         return commentRepository.findAllByBookId(bookId, pageable);
     }
 
@@ -40,11 +32,6 @@ public class CommentDAOImpl implements CommentDAO {
     public Boolean getLikedStatus(Long userId, Long commentId) {
         Optional<CommentLike> res = commentLikeRepository.findById(new CommentLikeId(userId, commentId));
         return res.isPresent();
-    }
-
-    @Override
-    public Integer countByBookId(Long bookId) {
-        return commentRepository.countByBookId(bookId);
     }
 
     @Override
@@ -60,5 +47,10 @@ public class CommentDAOImpl implements CommentDAO {
     @Override
     public void updateComment(Long id, int like) {
         commentRepository.updateLike(id, like);
+    }
+
+    @Override
+    public void save(Comment comment) {
+        commentRepository.save(comment);
     }
 }

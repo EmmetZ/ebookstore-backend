@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.CommentDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.dto.CommentDTO;
 import com.sjtu.se2321.backend.dto.PageResult;
+import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.entity.Comment;
 import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.service.CommentService;
@@ -24,42 +30,28 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    private BookDAO bookDAO;
+
     @Override
     public PageResult<CommentDTO> findAllByBookId(Long bookId, int pageSize, int pageIndex, String sort) {
-        int limit = pageSize;
-        int offset = pageIndex * pageSize;
-        List<Comment> comments = commentDAO.findAllByBookId(bookId, limit, offset, sort);
+        Pageable pageable;
+        if (sort.equals("createdTime")) {
+            pageable = PageRequest.of(pageIndex, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        } else {
+            pageable = PageRequest.of(pageIndex, pageSize, Sort.by(Sort.Direction.DESC, "like"));
+        }
+        Page<Comment> comments = commentDAO.findAllByBookId(bookId, pageable);
         List<CommentDTO> commentDTOs = new ArrayList<>();
-        User user = null;
-
-        for (Comment comment : comments) {
-            Long commentId = comment.getId();
-            if (user == null) {
-                Long userId = comment.getUserId();
-                user = userDAO.findById(userId);
-            }
-            Boolean liked = commentDAO.getLikedStatus(user.getId(), commentId);
-            String reply = null;
-            if (comment.getReplyId() != null) {
-                reply = userDAO.findById(comment.getReplyId()).getUsername();
-            }
-
-            CommentDTO commentDTO = new CommentDTO();
-            commentDTO.setId(commentId);
-            commentDTO.setUserId(user.getId());
-            commentDTO.setUsername(user.getUsername());
-            commentDTO.setAvatar(user.getAvatar().getFileName());
-            commentDTO.setContent(comment.getContent());
-            commentDTO.setLike(comment.getLike());
+        for (Comment comment : comments.getContent()) {
+            User user = comment.getUser();
+            Boolean liked = commentDAO.getLikedStatus(user.getId(), comment.getId());
+            CommentDTO commentDTO = new CommentDTO(comment);
             commentDTO.setLiked(liked);
-            commentDTO.setReply(reply);
-            commentDTO.setCreatedAt(comment.getCreatedAt());
-
             commentDTOs.add(commentDTO);
         }
-        int num = commentDAO.countByBookId(bookId);
-        int total = (int) Math.ceil((double) num / limit);
-        return new PageResult<>(total, commentDTOs);
+
+        return new PageResult<CommentDTO>(comments.getTotalPages(), commentDTOs);
     }
 
     @Override
@@ -76,4 +68,15 @@ public class CommentServiceImpl implements CommentService {
         commentDAO.updateComment(commentId, -1);
     }
 
+    @Override
+    public void save(Long userId, Long bookId, String content) {
+        Book book = bookDAO.getReferenceById(bookId);
+        User user = userDAO.getReferenceById(userId);
+        Comment comment = new Comment();
+        comment.setBook(book);
+        comment.setUser(user);
+        comment.setContent(content);
+        comment.setLike(0);
+        commentDAO.save(comment);
+    }
 }
