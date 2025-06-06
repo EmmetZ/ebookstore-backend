@@ -1,7 +1,5 @@
 package com.sjtu.se2321.backend.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sjtu.se2321.backend.Utils;
 import com.sjtu.se2321.backend.dto.OrderDTO;
+import com.sjtu.se2321.backend.dto.OrderReqParam;
+import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.PlaceOrderBody;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.service.OrderService;
@@ -24,9 +24,9 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/api/order")
-    public ResponseEntity<List<OrderDTO>> getUserOrders(HttpServletRequest request) {
+    public ResponseEntity<PageResult<OrderDTO>> getUserOrders(HttpServletRequest request, OrderReqParam param) {
         Long userId = Utils.getUserId(request);
-        List<OrderDTO> orders = orderService.findAllByUserId(userId);
+        PageResult<OrderDTO> orders = orderService.findAllByUserIdWithFilter(userId, param);
         return ResponseEntity.ok(orders);
     }
 

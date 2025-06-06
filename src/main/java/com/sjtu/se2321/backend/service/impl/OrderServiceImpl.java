@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +18,14 @@ import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.OrderDTO;
 import com.sjtu.se2321.backend.dto.OrderItemDTO;
+import com.sjtu.se2321.backend.dto.OrderReqParam;
+import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.entity.CartItem;
 import com.sjtu.se2321.backend.entity.Order;
 import com.sjtu.se2321.backend.entity.OrderItem;
 import com.sjtu.se2321.backend.entity.User;
+import com.sjtu.se2321.backend.repository.specification.OrderSpecifications;
 import com.sjtu.se2321.backend.service.OrderService;
 
 @Service
@@ -37,10 +44,12 @@ public class OrderServiceImpl implements OrderService {
     private UserDAO userDAO;
 
     @Override
-    public List<OrderDTO> findAllByUserId(Long userId) {
-        List<Order> orders = orderDAO.findAllByUserId(userId);
+    public PageResult<OrderDTO> findAllByUserIdWithFilter(Long userId, OrderReqParam param) {
+        Pageable pageable = PageRequest.of(param.getPageIndex(), param.getPageSize());
+        Specification<Order> spec = OrderSpecifications.withFilters(userId, param);
+        Page<Order> orders = orderDAO.findAll(spec, pageable);
         List<OrderDTO> orderDTOs = new ArrayList<>();
-        for (Order order : orders) {
+        for (Order order : orders.getContent()) {
             List<OrderItem> items = order.getItems();
             List<OrderItemDTO> dtos = new ArrayList<>();
             OrderDTO orderDTO = new OrderDTO(order);
@@ -54,13 +63,14 @@ public class OrderServiceImpl implements OrderService {
             orderDTO.setItems(dtos);
             orderDTOs.add(orderDTO);
         }
-        return orderDTOs;
+        return new PageResult<OrderDTO>(orders.getTotalPages(), orderDTOs);
     }
 
     @Override
     @Transactional
     public void placeOrder(Long userId, String address, String tel, String receiver, List<Long> itemIds) {
-        Order order = new Order(userId, address, tel, receiver);
+        User user = userDAO.findById(userId);
+        Order order = new Order(user, address, tel, receiver);
         int cost = 0;
         for (Long itemId : itemIds) {
             CartItem cartItem = cartDAO.findById(itemId);
@@ -75,7 +85,6 @@ public class OrderServiceImpl implements OrderService {
             cost += cartItem.getNumber() * bookDAO.findById(cartItem.getBook().getId()).getPrice();
         }
         orderDAO.save(order);
-        User user = userDAO.findById(userId);
         user.setBalance(user.getBalance() - cost);
         userDAO.save(user);
     }
