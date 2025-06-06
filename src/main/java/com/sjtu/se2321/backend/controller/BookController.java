@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sjtu.se2321.backend.Utils;
+import com.sjtu.se2321.backend.dto.AdminBookDTO;
 import com.sjtu.se2321.backend.dto.BookAddBody;
 import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookEditBody;
 import com.sjtu.se2321.backend.dto.BookReqParam;
+import com.sjtu.se2321.backend.dto.BookStatusUpdateBody;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.entity.Book;
@@ -59,7 +61,21 @@ public class BookController {
         if (index == null || size == null || index < 0 || size <= 0) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(bookService.findBookByKeywordAndTag(size, index * size, tag, keyword));
+        return ResponseEntity.ok(bookService.findBookByKeywordAndTag(index, size, tag, keyword));
+    }
+
+    @GetMapping("/api/admin/books")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PageResult<AdminBookDTO>> searchBooksAdmin(BookReqParam reqParam) {
+        Integer size = reqParam.getPageSize();
+        Integer index = reqParam.getPageIndex();
+        String keyword = reqParam.getKeyword().trim();
+        String tag = reqParam.getTag().trim();
+
+        if (index == null || size == null || index < 0 || size <= 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(bookService.findBookByKeywordAndTagAdmin(index, size, tag, keyword));
     }
 
     @GetMapping("/api/book/tags")
@@ -71,6 +87,26 @@ public class BookController {
     public ResponseEntity<BookDTO> findBookById(@PathVariable Long id) {
         Book book = bookService.findBookById(id);
         return ResponseEntity.ok(new BookDTO(book));
+    }
+
+    @GetMapping("/api/admin/book/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AdminBookDTO> findBookByIdAdmin(@PathVariable Long id) {
+        Book book = bookService.findBookById(id);
+        return ResponseEntity.ok(new AdminBookDTO(book));
+    }
+
+    @PutMapping("/api/admin/book/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Result<Void>> updateBookStatus(
+            @PathVariable Long id,
+            @RequestBody BookStatusUpdateBody body) {
+        Book book = bookService.findBookById(id);
+        book.setIsActive(body.getIsActive());
+        bookService.save(book);
+
+        String message = body.getIsActive() ? "书籍上架成功" : "书籍下架成功";
+        return ResponseEntity.ok(Result.success(message));
     }
 
     @PutMapping("/api/book/{id}")
@@ -134,8 +170,12 @@ public class BookController {
     }
 
     @PostMapping("/api/book")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Result<Void>> addBook(@RequestBody BookAddBody body) {
         Book book = new Book(body);
+        // 默认上架
+        book.setIsActive(true);
+
         if (body.getCoverId() != 0) {
             Image image = imageService.getReferenceById(body.getCoverId());
             book.setCover(image);

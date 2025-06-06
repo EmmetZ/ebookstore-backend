@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.sjtu.se2321.backend.dto.BookAddBody;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -43,6 +44,9 @@ public class Book {
     @JoinTable(name = "BookTag", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     public Book(BookAddBody body) {
         this.author = body.getAuthor();
         this.description = body.getDescription();
@@ -50,5 +54,6 @@ public class Book {
         this.stock = body.getStock();
         this.title = body.getTitle();
         this.sales = 0;
+        this.isActive = true;
     }
 }

@@ -12,4 +12,5 @@ public class BookEditBody {
     private String description;
     private Integer stock;
     private List<String> tags;
+    private Boolean isActive;
 }

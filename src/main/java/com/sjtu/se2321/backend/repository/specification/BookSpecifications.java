@@ -13,11 +13,11 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 
 public class BookSpecifications {
-    public static Specification<Book> withFilters(Long tagId, String keyword) {
+    public static Specification<Book> withFilters(Long tagId, String keyword, Boolean showInactive) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (tagId != -1) {
+            if (tagId != null && tagId != -1) {
                 Join<Book, Tag> tags = root.join("tags", JoinType.INNER);
                 predicates.add(cb.equal(tags.get("id"), tagId));
                 if (query != null) {
@@ -30,8 +30,16 @@ public class BookSpecifications {
                 Predicate authorLike = cb.like(root.get("author"), "%" + keyword + "%");
                 predicates.add(cb.or(titleLike, authorLike));
             }
+            
+            if (showInactive == null || !showInactive) {
+                predicates.add(cb.equal(root.get("isActive"), true));
+            }
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+    
+    public static Specification<Book> withFilters(Long tagId, String keyword) {
+        return withFilters(tagId, keyword, false);
     }
 }
