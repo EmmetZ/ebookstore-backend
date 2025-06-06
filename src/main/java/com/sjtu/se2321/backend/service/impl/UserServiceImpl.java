@@ -10,6 +10,7 @@ import com.sjtu.se2321.backend.dao.AddressDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
+import com.sjtu.se2321.backend.dto.OtherUserDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.Address;
 import com.sjtu.se2321.backend.entity.User;
@@ -76,6 +77,13 @@ public class UserServiceImpl implements UserService {
         addr.setAddress(body.getAddress());
         addr.setUser(userDAO.getReferenceById(userId));
         addressDAO.save(addr);
+    }
+
+    @Override
+    public OtherUserDTO findOtherUserById(Long userId) {
+        User user = userDAO.findById(userId);
+        OtherUserDTO dto = new OtherUserDTO(user);
+        return dto;
     }
 
 }

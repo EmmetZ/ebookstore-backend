@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
+import com.sjtu.se2321.backend.dto.OtherUserDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.User;
 
@@ -27,4 +28,6 @@ public interface UserService {
     public User findByEmail(String email);
 
     public void saveAddress(Long userId, AddrReqBody body);
+
+    public OtherUserDTO findOtherUserById(Long userId);
 }

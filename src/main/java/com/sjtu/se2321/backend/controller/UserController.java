@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sjtu.se2321.backend.Utils;
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
+import com.sjtu.se2321.backend.dto.OtherUserDTO;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.Image;
@@ -112,6 +113,11 @@ public class UserController {
         Long userId = Utils.getUserId(request);
         userService.saveAddress(userId, body);
         return ResponseEntity.ok(Result.success("添加地址成功"));
+    }
+
+    @GetMapping("/api/user/{id}")
+    public ResponseEntity<OtherUserDTO> getOtherUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findOtherUserById(id));
     }
 
 }
