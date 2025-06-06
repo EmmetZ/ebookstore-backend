@@ -9,6 +9,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 public class Utils {
 
     public static ResponseEntity<Resource> getImageResource(String dir, String fileName) throws IOException {
@@ -24,6 +27,12 @@ public class Utils {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    public static Long getUserId(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long userId = (Long) session.getAttribute("userId");
+        return userId;
     }
 
 }

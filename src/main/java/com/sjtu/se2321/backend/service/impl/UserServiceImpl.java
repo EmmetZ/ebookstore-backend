@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.sjtu.se2321.backend.dao.AddressDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
+import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.Address;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<AddressDTO> findAllAddressByUserId(Long userId) {
-        List<Address> addressList = addressDAO.findAllByUserId(userId);
+        List<Address> addressList = userDAO.findById(userId).getAddresses();
         List<AddressDTO> result = new ArrayList<>();
         for (Address addr : addressList) {
             result.add(new AddressDTO(addr));
@@ -64,6 +65,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByEmail(String email) {
         return userDAO.findByEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public void saveAddress(Long userId, AddrReqBody body) {
+        Address addr = new Address();
+        addr.setReceiver(body.getReceiver());
+        addr.setTel(body.getTel());
+        addr.setAddress(body.getAddress());
+        addr.setUser(userDAO.getReferenceById(userId));
+        addressDAO.save(addr);
     }
 
 }

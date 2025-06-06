@@ -16,11 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sjtu.se2321.backend.Utils;
+import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.dto.UserDTO;
@@ -105,6 +107,15 @@ public class UserController {
     @GetMapping("/api/user/avatars/{fileName}")
     public ResponseEntity<Resource> getAvatar(@PathVariable String fileName) throws IOException {
         return Utils.getImageResource(uploadDir, fileName);
+    }
+
+    @PostMapping("/api/user/me/addresses")
+    public ResponseEntity<Result<Void>> addAddress(
+            HttpServletRequest request,
+            @RequestBody AddrReqBody body) {
+        Long userId = Utils.getUserId(request);
+        userService.saveAddress(userId, body);
+        return ResponseEntity.ok(Result.success("添加地址成功"));
     }
 
 }

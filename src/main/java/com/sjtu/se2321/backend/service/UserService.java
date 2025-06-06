@@ -2,6 +2,7 @@ package com.sjtu.se2321.backend.service;
 
 import java.util.List;
 
+import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.User;
@@ -25,4 +26,5 @@ public interface UserService {
 
     public User findByEmail(String email);
 
+    public void saveAddress(Long userId, AddrReqBody body);
 }
