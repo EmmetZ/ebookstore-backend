@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sjtu.se2321.backend.Utils;
 import com.sjtu.se2321.backend.dto.CommentDTO;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.service.CommentService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class CommentController {
@@ -33,16 +33,14 @@ public class CommentController {
 
     @PutMapping("/api/comment/{id}/like")
     public ResponseEntity<Result<Void>> likeComment(@PathVariable Long id, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = Utils.getUserId(request);
         commentService.likeComment(userId, id);
         return ResponseEntity.ok(Result.success("点赞成功"));
     }
 
     @PutMapping("/api/comment/{id}/unlike")
     public ResponseEntity<Result<Void>> unlikeComment(@PathVariable Long id, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = Utils.getUserId(request);
         commentService.dislikeComment(userId, id);
         return ResponseEntity.ok(Result.success("取消点赞成功"));
     }

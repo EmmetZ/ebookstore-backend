@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sjtu.se2321.backend.Utils;
 import com.sjtu.se2321.backend.dto.CartItemDTO;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.service.CartService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class CartController {
@@ -26,8 +26,7 @@ public class CartController {
 
     @GetMapping("/api/cart")
     public ResponseEntity<List<CartItemDTO>> getCartItemsByUserId(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = Utils.getUserId(request);
         return ResponseEntity.ok(cartService.findAllByUserId(userId));
     }
 
@@ -39,8 +38,7 @@ public class CartController {
 
     @PutMapping("/api/cart")
     public ResponseEntity<Result<Void>> addBookToCart(@RequestParam Long bookId, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = Utils.getUserId(request);
         cartService.save(bookId, userId);
         return ResponseEntity.ok(Result.success("add success"));
     }

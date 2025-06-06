@@ -31,7 +31,6 @@ import com.sjtu.se2321.backend.service.ImageService;
 import com.sjtu.se2321.backend.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class UserController {
@@ -47,8 +46,7 @@ public class UserController {
 
     @GetMapping("/api/user/me")
     public ResponseEntity<UserDTO> getMe(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = Utils.getUserId(request);
         UserDTO user = userService.getMe(userId);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -58,8 +56,7 @@ public class UserController {
 
     @GetMapping("/api/user/me/addresses")
     public ResponseEntity<List<AddressDTO>> getUserAddress(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = Utils.getUserId(request);
         List<AddressDTO> addresses = userService.findAllAddressByUserId(userId);
         return ResponseEntity.ok(addresses);
     }
@@ -67,8 +64,7 @@ public class UserController {
     @PostMapping("/api/user/me/avatar")
     public ResponseEntity<Result<Void>> uploadAvatar(HttpServletRequest request,
             @RequestParam MultipartFile file) throws IOException {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("userId");
+        Long userId = Utils.getUserId(request);
 
         Path uploadPath = Paths.get(uploadDir);
 
