@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sjtu.se2321.backend.dao.AddressDAO;
@@ -14,6 +15,7 @@ import com.sjtu.se2321.backend.dto.OtherUserDTO;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.Address;
 import com.sjtu.se2321.backend.entity.User;
+import com.sjtu.se2321.backend.entity.UserAuth;
 import com.sjtu.se2321.backend.service.UserService;
 
 import jakarta.transaction.Transactional;
@@ -26,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AddressDAO addressDAO;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User findUserByUsername(String username) {
@@ -90,5 +95,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteAddressById(Long id) {
         addressDAO.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(Long id, String password) {
+        User user = userDAO.findById(id);
+        UserAuth userAuth = user.getUserAuth();
+        userAuth.setPassword(passwordEncoder.encode(password));
+        user.setUserAuth(userAuth);
+        userDAO.save(user);
     }
 }

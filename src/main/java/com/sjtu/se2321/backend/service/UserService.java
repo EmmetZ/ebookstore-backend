@@ -32,4 +32,6 @@ public interface UserService {
     public OtherUserDTO findOtherUserById(Long userId);
 
     public void deleteAddressById(Long id);
+
+    public void changePassword(Long id, String password);
 }

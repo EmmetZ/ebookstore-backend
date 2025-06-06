@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sjtu.se2321.backend.Utils;
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
+import com.sjtu.se2321.backend.dto.ChangePasswordBody;
 import com.sjtu.se2321.backend.dto.OtherUserDTO;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.dto.UserDTO;
@@ -125,6 +127,14 @@ public class UserController {
     @GetMapping("/api/user/{id}")
     public ResponseEntity<OtherUserDTO> getOtherUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findOtherUserById(id));
+    }
+
+    @PutMapping("/api/user/me/password")
+    public ResponseEntity<Result<Void>> changePassword(HttpServletRequest request,
+            @RequestBody ChangePasswordBody body) {
+        Long id = Utils.getUserId(request);
+        userService.changePassword(id, body.getPassword());
+        return ResponseEntity.ok(Result.success("修改密码成功"));
     }
 
 }
