@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sjtu.se2321.backend.dto.OrderDTO;
 import com.sjtu.se2321.backend.dto.PlaceOrderBody;
 import com.sjtu.se2321.backend.dto.Result;
-import com.sjtu.se2321.backend.entity.Order;
 import com.sjtu.se2321.backend.service.OrderService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,10 +24,10 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/api/order")
-    public ResponseEntity<List<Order>> getUserOrders(HttpServletRequest request) {
+    public ResponseEntity<List<OrderDTO>> getUserOrders(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("userId");
-        List<Order> orders = orderService.findAllByUserId(userId);
+        List<OrderDTO> orders = orderService.findAllByUserId(userId);
         return ResponseEntity.ok(orders);
     }
 

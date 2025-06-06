@@ -1,5 +1,6 @@
 package com.sjtu.se2321.backend.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.CartDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
+import com.sjtu.se2321.backend.dto.BookDTO;
+import com.sjtu.se2321.backend.dto.CartItemDTO;
 import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.entity.CartItem;
 import com.sjtu.se2321.backend.entity.User;
@@ -27,8 +30,16 @@ public class CartServiceImpl implements CartService {
     private UserDAO userDAO;
 
     @Override
-    public List<CartItem> findAllByUserId(Long userId) {
-        return cartDAO.findAllByUserId(userId);
+    public List<CartItemDTO> findAllByUserId(Long userId) {
+        List<CartItem> items = cartDAO.findAllByUserId(userId);
+        List<CartItemDTO> dtos = new ArrayList<>();
+        for (CartItem cartItem : items) {
+            CartItemDTO dto = new CartItemDTO(cartItem);
+            BookDTO bookDTO = new BookDTO(cartItem.getBook());
+            dto.setBook(bookDTO);
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
     @Override

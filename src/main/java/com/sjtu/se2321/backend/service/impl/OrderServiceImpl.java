@@ -1,5 +1,6 @@
 package com.sjtu.se2321.backend.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,10 @@ import com.sjtu.se2321.backend.dao.BookDAO;
 import com.sjtu.se2321.backend.dao.CartDAO;
 import com.sjtu.se2321.backend.dao.OrderDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
+import com.sjtu.se2321.backend.dto.BookDTO;
+import com.sjtu.se2321.backend.dto.OrderDTO;
+import com.sjtu.se2321.backend.dto.OrderItemDTO;
+import com.sjtu.se2321.backend.entity.Book;
 import com.sjtu.se2321.backend.entity.CartItem;
 import com.sjtu.se2321.backend.entity.Order;
 import com.sjtu.se2321.backend.entity.OrderItem;
@@ -31,8 +36,24 @@ public class OrderServiceImpl implements OrderService {
     private UserDAO userDAO;
 
     @Override
-    public List<Order> findAllByUserId(Long userId) {
-        return orderDAO.findAllByUserId(userId);
+    public List<OrderDTO> findAllByUserId(Long userId) {
+        List<Order> orders = orderDAO.findAllByUserId(userId);
+        List<OrderDTO> orderDTOs = new ArrayList<>();
+        for (Order order : orders) {
+            List<OrderItem> items = order.getItems();
+            List<OrderItemDTO> dtos = new ArrayList<>();
+            OrderDTO orderDTO = new OrderDTO(order);
+            for (OrderItem item : items) {
+                Book book = item.getBook();
+                BookDTO bookDTO = new BookDTO(book);
+                OrderItemDTO dto = new OrderItemDTO(item);
+                dto.setBook(bookDTO);
+                dtos.add(dto);
+            }
+            orderDTO.setItems(dtos);
+            orderDTOs.add(orderDTO);
+        }
+        return orderDTOs;
     }
 
     @Override
