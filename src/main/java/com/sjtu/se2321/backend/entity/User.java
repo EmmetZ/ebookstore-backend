@@ -33,6 +33,9 @@ public class User {
     private String introduction;
     private String email;
 
+    @Column(name = "is_banned")
+    private Boolean isBanned;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "avatar_id", referencedColumnName = "id")
     private Avatar avatar;

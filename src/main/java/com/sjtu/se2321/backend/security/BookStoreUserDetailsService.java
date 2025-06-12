@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +29,10 @@ public class BookStoreUserDetailsService implements UserDetailsService {
 
         if (user == null) {
             throw new UsernameNotFoundException(username);
+        }
+
+        if (user.getIsBanned() != null && user.getIsBanned()) {
+            throw new DisabledException("账号已被禁用，请联系管理员");
         }
 
         return new org.springframework.security.core.userdetails.User(
