@@ -96,7 +96,7 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public void editBookInfo(Long id, BookEditBody body) {
         Book book = bookDAO.findById(id);
-        BeanUtils.copyProperties(body, book, "tags");
+        BeanUtils.copyProperties(body, book, "tags", "isActive");
         save(book, body.getTags());
     }
 
