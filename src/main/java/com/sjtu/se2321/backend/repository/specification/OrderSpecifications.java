@@ -1,5 +1,6 @@
 package com.sjtu.se2321.backend.repository.specification;
 
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,21 @@ public class OrderSpecifications {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
+    }
+
+    public static Specification<Order> withFilters(LocalDate start, LocalDate end) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (start != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("createdAt"),
+                        start.atStartOfDay(ZoneOffset.UTC).toOffsetDateTime()));
+            }
+            if (end != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("createdAt"), end.plusDays(1)
+                        .atStartOfDay(ZoneOffset.UTC).minusMinutes(1).toOffsetDateTime()));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
 }

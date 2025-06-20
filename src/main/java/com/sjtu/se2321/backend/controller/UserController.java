@@ -30,9 +30,11 @@ import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.AdminUserDTO;
 import com.sjtu.se2321.backend.dto.ChangeIntroBody;
 import com.sjtu.se2321.backend.dto.ChangePasswordBody;
+import com.sjtu.se2321.backend.dto.DateReqParam;
 import com.sjtu.se2321.backend.dto.OtherUserDTO;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.Result;
+import com.sjtu.se2321.backend.dto.UserConsumptionData;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.dto.UserReqParam;
 import com.sjtu.se2321.backend.dto.UserStatusBody;
@@ -168,6 +170,12 @@ public class UserController {
     public ResponseEntity<Result<Void>> changeUserStatus(@RequestBody UserStatusBody body) {
         userService.changeUserStatus(body.getId(), body.getStatus());
         return ResponseEntity.ok(Result.success("修改成功"));
+    }
+
+    @GetMapping("/api/users/data")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserConsumptionData>> getConsumptionRank(DateReqParam param) {
+        return ResponseEntity.ok(userService.getConsumptionRank(param));
     }
 
 }

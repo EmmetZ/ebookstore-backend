@@ -5,6 +5,7 @@ import java.util.List;
 import com.sjtu.se2321.backend.dto.AdminBookDTO;
 import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookEditBody;
+import com.sjtu.se2321.backend.dto.DateReqParam;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.entity.Book;
 
@@ -21,6 +22,8 @@ public interface BookService {
     public void save(Book book, List<String> tagNames);
 
     public void save(Book book);
+
+    public List<AdminBookDTO> getSalesRank(DateReqParam param);
 
     // tag
     public List<String> findAllTags();

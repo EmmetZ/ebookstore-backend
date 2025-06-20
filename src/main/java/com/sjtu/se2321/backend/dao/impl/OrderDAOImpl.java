@@ -35,4 +35,9 @@ public class OrderDAOImpl implements OrderDAO {
         return orderRepository.findAll(spec, pageable);
     }
 
+    @Override
+    public List<Order> findAll(Specification<Order> spec) {
+        return orderRepository.findAll(spec);
+    }
+
 }

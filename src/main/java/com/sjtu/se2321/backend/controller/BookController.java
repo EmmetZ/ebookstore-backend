@@ -31,6 +31,7 @@ import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookEditBody;
 import com.sjtu.se2321.backend.dto.BookReqParam;
 import com.sjtu.se2321.backend.dto.BookStatusUpdateBody;
+import com.sjtu.se2321.backend.dto.DateReqParam;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.entity.Book;
@@ -187,6 +188,12 @@ public class BookController {
         }
         bookService.save(book, body.getTags());
         return ResponseEntity.ok(Result.success("添加书籍成功"));
+    }
+
+    @GetMapping("/api/books/rank")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AdminBookDTO>> getSalesRank(DateReqParam param) {
+        return ResponseEntity.ok(bookService.getSalesRank(param));
     }
 
 }

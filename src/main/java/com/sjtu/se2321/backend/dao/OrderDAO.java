@@ -14,4 +14,6 @@ public interface OrderDAO {
     public void save(Order order);
 
     public Page<Order> findAll(Specification<Order> spec, Pageable pageable);
+
+    public List<Order> findAll(Specification<Order> spec);
 }

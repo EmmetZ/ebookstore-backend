@@ -1,9 +1,12 @@
 package com.sjtu.se2321.backend.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +19,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sjtu.se2321.backend.dao.BookDAO;
+import com.sjtu.se2321.backend.dao.OrderDAO;
 import com.sjtu.se2321.backend.dao.TagDAO;
 import com.sjtu.se2321.backend.dto.AdminBookDTO;
 import com.sjtu.se2321.backend.dto.BookDTO;
 import com.sjtu.se2321.backend.dto.BookEditBody;
+import com.sjtu.se2321.backend.dto.DateReqParam;
 import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.entity.Book;
+import com.sjtu.se2321.backend.entity.Order;
+import com.sjtu.se2321.backend.entity.OrderItem;
 import com.sjtu.se2321.backend.entity.Tag;
 import com.sjtu.se2321.backend.repository.specification.BookSpecifications;
+import com.sjtu.se2321.backend.repository.specification.OrderSpecifications;
 import com.sjtu.se2321.backend.service.BookService;
 
 @Service
@@ -34,6 +42,9 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private TagDAO tagDAO;
+
+    @Autowired
+    private OrderDAO orderDAO;
 
     @Override
     public PageResult<BookDTO> findBookByKeywordAndTag(Integer pageIndex, Integer pageSize, String tagName,
@@ -127,4 +138,39 @@ public class BookServiceImpl implements BookService {
                 .toList();
     }
 
+    @Override
+    public List<AdminBookDTO> getSalesRank(DateReqParam param) {
+        Specification<Order> spec = OrderSpecifications.withFilters(param.getStart(), param.getEnd());
+        List<Order> orders = orderDAO.findAll(spec);
+
+        Map<Long, Integer> bookSalesMap = new HashMap<>();
+        Map<Long, Book> bookMap = new HashMap<>();
+
+        for (Order order : orders) {
+            for (OrderItem item : order.getItems()) {
+                Book book = item.getBook();
+                Long bookId = book.getId();
+
+                bookSalesMap.put(bookId, bookSalesMap.getOrDefault(bookId, 0) + item.getNumber());
+
+                // 保存书籍信息以避免重复查询
+                if (!bookMap.containsKey(bookId)) {
+                    bookMap.put(bookId, book);
+                }
+            }
+        }
+
+        // 排序，保存前10
+        List<AdminBookDTO> result = bookSalesMap.entrySet().stream()
+                .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
+                .limit(10)
+                .map(entry -> {
+                    AdminBookDTO dto = new AdminBookDTO(bookMap.get(entry.getKey()));
+                    dto.setSales(entry.getValue());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return result;
+    }
 }

@@ -1,27 +1,37 @@
 package com.sjtu.se2321.backend.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sjtu.se2321.backend.dao.AddressDAO;
+import com.sjtu.se2321.backend.dao.OrderDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
 import com.sjtu.se2321.backend.dto.AdminUserDTO;
+import com.sjtu.se2321.backend.dto.DateReqParam;
 import com.sjtu.se2321.backend.dto.OtherUserDTO;
 import com.sjtu.se2321.backend.dto.PageResult;
+import com.sjtu.se2321.backend.dto.UserConsumptionData;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.Address;
+import com.sjtu.se2321.backend.entity.Order;
+import com.sjtu.se2321.backend.entity.OrderItem;
 import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.entity.User.Role;
 import com.sjtu.se2321.backend.entity.UserAuth;
+import com.sjtu.se2321.backend.repository.specification.OrderSpecifications;
 import com.sjtu.se2321.backend.service.UserService;
 
 import jakarta.transaction.Transactional;
@@ -37,6 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private OrderDAO orderDAO;
 
     @Override
     public User findUserByUsername(String username) {
@@ -139,6 +152,45 @@ public class UserServiceImpl implements UserService {
         User user = userDAO.findById(id);
         user.setIsBanned(status);
         userDAO.save(user);
+    }
+
+    @Override
+    public List<UserConsumptionData> getConsumptionRank(DateReqParam param) {
+        Specification<Order> spec = OrderSpecifications.withFilters(param.getStart(), param.getEnd());
+        List<Order> orders = orderDAO.findAll(spec);
+
+        Map<Long, Integer> consumptionMap = new HashMap<>();
+        Map<Long, User> userMap = new HashMap<>();
+
+        for (Order order : orders) {
+            Long userId = order.getUser().getId();
+            int total = 0;
+            for (OrderItem item : order.getItems()) {
+                total += item.getNumber() * item.getBook().getPrice();
+            }
+            consumptionMap.put(userId, consumptionMap.getOrDefault(userId, 0) + total);
+
+            // 保存信息以避免重复查询
+            if (!userMap.containsKey(userId)) {
+                userMap.put(userId, order.getUser());
+            }
+        }
+
+        // 排序，保存前10
+        List<UserConsumptionData> result = consumptionMap.entrySet().stream()
+                .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
+                .limit(10)
+                .map(entry -> {
+                    AdminUserDTO dto = new AdminUserDTO(userMap.get(entry.getKey()));
+                    UserConsumptionData data = new UserConsumptionData();
+                    data.setUser(dto);
+                    data.setConsumption(consumptionMap.get(entry.getKey()));
+                    return data;
+                })
+                .collect(Collectors.toList());
+
+        return result;
+
     }
 
 }
