@@ -18,7 +18,7 @@ public class Avatar extends Image {
     }
 
     public static Avatar defaultAvatar() {
-        return new Avatar("default_avatar.jpg"); 
+        return new Avatar("default_user.jpg"); 
     }
 
 }
