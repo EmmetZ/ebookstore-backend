@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +14,13 @@ import com.sjtu.se2321.backend.dao.AddressDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
+import com.sjtu.se2321.backend.dto.AdminUserDTO;
 import com.sjtu.se2321.backend.dto.OtherUserDTO;
+import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.Address;
 import com.sjtu.se2321.backend.entity.User;
+import com.sjtu.se2321.backend.entity.User.Role;
 import com.sjtu.se2321.backend.entity.UserAuth;
 import com.sjtu.se2321.backend.service.UserService;
 
@@ -112,6 +118,26 @@ public class UserServiceImpl implements UserService {
     public void changeIntro(Long id, String intro) {
         User user = userDAO.findById(id);
         user.setIntroduction(intro);
+        userDAO.save(user);
+    }
+
+    @Override
+    public PageResult<AdminUserDTO> findByRole(Integer pageIndex, Integer pageSize, Role role) {
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Page<User> users = userDAO.findByRole(role, pageable);
+        List<AdminUserDTO> dtos = new ArrayList<>();
+        for (User user : users) {
+            AdminUserDTO dto = new AdminUserDTO(user);
+            dtos.add(dto);
+        }
+        return new PageResult<>(users.getTotalPages(), dtos);
+    }
+
+    @Override
+    @Transactional
+    public void changeUserStatus(Long id, Boolean status) {
+        User user = userDAO.findById(id);
+        user.setIsBanned(status);
         userDAO.save(user);
     }
 

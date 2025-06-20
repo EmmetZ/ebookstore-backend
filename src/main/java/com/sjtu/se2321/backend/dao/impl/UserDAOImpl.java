@@ -1,11 +1,14 @@
 package com.sjtu.se2321.backend.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.entity.UserAuth;
+import com.sjtu.se2321.backend.entity.User.Role;
 import com.sjtu.se2321.backend.repository.UserAuthRepository;
 import com.sjtu.se2321.backend.repository.UserRepository;
 
@@ -46,5 +49,10 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Page<User> findByRole(Role role, Pageable pageable) {
+        return userRepository.findByRole(role, pageable);
     }
 }

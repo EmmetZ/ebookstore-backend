@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
+import com.sjtu.se2321.backend.dto.AdminUserDTO;
 import com.sjtu.se2321.backend.dto.OtherUserDTO;
+import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.entity.User;
 
@@ -36,5 +38,9 @@ public interface UserService {
     public void changePassword(Long id, String password);
 
     public void changeIntro(Long id, String intro);
+
+    public PageResult<AdminUserDTO> findByRole(Integer pageIndex, Integer pageSize, User.Role role);
+
+    public void changeUserStatus(Long id, Boolean status);
 
 }

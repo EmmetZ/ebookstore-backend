@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,12 +27,17 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sjtu.se2321.backend.Utils;
 import com.sjtu.se2321.backend.dto.AddrReqBody;
 import com.sjtu.se2321.backend.dto.AddressDTO;
+import com.sjtu.se2321.backend.dto.AdminUserDTO;
 import com.sjtu.se2321.backend.dto.ChangeIntroBody;
 import com.sjtu.se2321.backend.dto.ChangePasswordBody;
 import com.sjtu.se2321.backend.dto.OtherUserDTO;
+import com.sjtu.se2321.backend.dto.PageResult;
 import com.sjtu.se2321.backend.dto.Result;
 import com.sjtu.se2321.backend.dto.UserDTO;
+import com.sjtu.se2321.backend.dto.UserReqParam;
+import com.sjtu.se2321.backend.dto.UserStatusBody;
 import com.sjtu.se2321.backend.entity.Image;
+import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.service.ImageService;
 import com.sjtu.se2321.backend.service.UserService;
 
@@ -143,6 +149,25 @@ public class UserController {
         Long id = Utils.getUserId(request);
         userService.changeIntro(id, body.getIntroduction());
         return ResponseEntity.ok(Result.success("修改个人简介成功"));
+    }
+
+    @GetMapping("/api/users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PageResult<AdminUserDTO>> findAllUser(UserReqParam params) {
+        Integer pageIndex = params.getPageIndex();
+        Integer pageSize = params.getPageSize();
+        User.Role role = params.getRole();
+        if (pageIndex == null || pageSize == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(userService.findByRole(pageIndex, pageSize, role));
+    }
+
+    @PostMapping("/api/user/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Result<Void>> changeUserStatus(@RequestBody UserStatusBody body) {
+        userService.changeUserStatus(body.getId(), body.getStatus());
+        return ResponseEntity.ok(Result.success("修改成功"));
     }
 
 }

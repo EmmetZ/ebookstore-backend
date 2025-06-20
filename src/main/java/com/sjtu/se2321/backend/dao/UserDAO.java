@@ -1,5 +1,8 @@
 package com.sjtu.se2321.backend.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.entity.UserAuth;
 
@@ -17,4 +20,5 @@ public interface UserDAO {
 
     public User findByEmail(String email);
 
+    public Page<User> findByRole(User.Role role, Pageable pageable);
 }
