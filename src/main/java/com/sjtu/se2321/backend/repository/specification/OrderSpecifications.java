@@ -20,7 +20,9 @@ public class OrderSpecifications {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            predicates.add(cb.equal(root.get("user").get("id"), userId));
+            if (userId != null) {
+                predicates.add(cb.equal(root.get("user").get("id"), userId));
+            }
 
             if (param != null) {
                 if (param.getKeyword() != null) {

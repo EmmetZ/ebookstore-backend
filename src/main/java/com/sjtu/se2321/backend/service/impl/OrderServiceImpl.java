@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResult<OrderDTO> findAllByUserIdWithFilter(Long userId, OrderReqParam param) {
-        Pageable pageable = PageRequest.of(param.getPageIndex(), param.getPageSize());
+        PageRequest pageable = PageRequest.of(param.getPageIndex(), param.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "createdAt"));
         Specification<Order> spec = OrderSpecifications.withFilters(userId, param);
         Page<Order> orders = orderDAO.findAll(spec, pageable);
         List<OrderDTO> orderDTOs = new ArrayList<>();
@@ -87,5 +88,10 @@ public class OrderServiceImpl implements OrderService {
         orderDAO.save(order);
         user.setBalance(user.getBalance() - cost);
         userDAO.save(user);
+    }
+
+    @Override
+    public PageResult<OrderDTO> findAllWithFilter(OrderReqParam param) {
+        return findAllByUserIdWithFilter(null, param);
     }
 }

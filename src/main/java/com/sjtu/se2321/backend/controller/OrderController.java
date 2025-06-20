@@ -2,6 +2,7 @@ package com.sjtu.se2321.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,10 +24,17 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/api/order")
+    @GetMapping("/api/user/order")
     public ResponseEntity<PageResult<OrderDTO>> getUserOrders(HttpServletRequest request, OrderReqParam param) {
         Long userId = Utils.getUserId(request);
         PageResult<OrderDTO> orders = orderService.findAllByUserIdWithFilter(userId, param);
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/api/order")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PageResult<OrderDTO>> getOrders(OrderReqParam param) {
+        PageResult<OrderDTO> orders = orderService.findAllWithFilter(param);
         return ResponseEntity.ok(orders);
     }
 
