@@ -1,5 +1,7 @@
 package com.sjtu.se2321.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sjtu.se2321.backend.Utils;
+import com.sjtu.se2321.backend.dto.BookStatistic;
+import com.sjtu.se2321.backend.dto.DateReqParam;
 import com.sjtu.se2321.backend.dto.OrderDTO;
 import com.sjtu.se2321.backend.dto.OrderReqParam;
 import com.sjtu.se2321.backend.dto.PageResult;
@@ -43,6 +47,12 @@ public class OrderController {
         Long userId = Utils.getUserId(request);
         orderService.placeOrder(userId, body.getAddress(), body.getTel(), body.getReceiver(), body.getItemIds());
         return ResponseEntity.ok(Result.success("下单成功"));
+    }
+
+    @GetMapping("/api/user/order/statistics")
+    public ResponseEntity<List<BookStatistic>> getUserOrderData(HttpServletRequest request, DateReqParam param) {
+        Long userId = Utils.getUserId(request);
+        return ResponseEntity.ok(orderService.gerOrderStatistic(userId, param));
     }
 
 }

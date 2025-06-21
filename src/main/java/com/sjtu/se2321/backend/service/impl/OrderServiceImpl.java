@@ -1,7 +1,10 @@
 package com.sjtu.se2321.backend.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,8 @@ import com.sjtu.se2321.backend.dao.CartDAO;
 import com.sjtu.se2321.backend.dao.OrderDAO;
 import com.sjtu.se2321.backend.dao.UserDAO;
 import com.sjtu.se2321.backend.dto.BookDTO;
+import com.sjtu.se2321.backend.dto.BookStatistic;
+import com.sjtu.se2321.backend.dto.DateReqParam;
 import com.sjtu.se2321.backend.dto.OrderDTO;
 import com.sjtu.se2321.backend.dto.OrderItemDTO;
 import com.sjtu.se2321.backend.dto.OrderReqParam;
@@ -93,5 +98,40 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageResult<OrderDTO> findAllWithFilter(OrderReqParam param) {
         return findAllByUserIdWithFilter(null, param);
+    }
+
+    @Override
+    public List<BookStatistic> gerOrderStatistic(Long userId, DateReqParam param) {
+        Specification<Order> spec = OrderSpecifications.withFilters(userId,
+                new OrderReqParam(null, param.getStart(), param.getEnd(), null, null));
+        List<Order> orders = orderDAO.findAll(spec);
+
+        Map<Long, Integer> bookSalesMap = new HashMap<>();
+        Map<Long, Book> bookMap = new HashMap<>();
+
+        for (Order order : orders) {
+            for (OrderItem item : order.getItems()) {
+                Book book = item.getBook();
+                Long bookId = book.getId();
+
+                bookSalesMap.put(bookId, bookSalesMap.getOrDefault(bookId, 0) + item.getNumber());
+
+                // 保存书籍信息以避免重复查询
+                if (!bookMap.containsKey(bookId)) {
+                    bookMap.put(bookId, book);
+                }
+            }
+        }
+
+        List<BookStatistic> result = bookSalesMap.entrySet().stream()
+                .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
+                .map(entry -> {
+                    BookStatistic book = new BookStatistic(bookMap.get(entry.getKey()));
+                    book.setNumber(entry.getValue());
+                    return book;
+                })
+                .collect(Collectors.toList());
+
+        return result;
     }
 }
