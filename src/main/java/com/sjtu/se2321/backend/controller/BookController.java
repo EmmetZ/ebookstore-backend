@@ -144,7 +144,8 @@ public class BookController {
                 imageService.save(cover);
 
                 // delete previous cover
-                if (preCover != null) {
+                // don't delete default cover
+                if (preCover != null && preCover != BookCover.getDefaultFileName()) {
                     Path prePath = uploadPath.resolve(preCover);
                     Files.deleteIfExists(prePath);
                 }
@@ -182,7 +183,7 @@ public class BookController {
             book.setCover(image);
         } else {
             Image image = new Image();
-            image.setFileName("default_cover.jpg");
+            image.setFileName(BookCover.getDefaultFileName());
             image = imageService.save(image);
             book.setCover(image);
         }

@@ -39,6 +39,7 @@ public class RegisterController {
         user.setBalance(0);
         user.setAvatar(Avatar.defaultAvatar());
         user.setRole(User.Role.USER);
+        user.setIsBanned(false);
 
         UserAuth userAuth = new UserAuth();
         userAuth.setPassword(passwordEncoder.encode(body.getPassword()));

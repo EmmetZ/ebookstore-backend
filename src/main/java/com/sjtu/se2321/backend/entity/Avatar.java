@@ -21,4 +21,8 @@ public class Avatar extends Image {
         return new Avatar("default_user.jpg"); 
     }
 
+    public static String getDefaultFileName() {
+        return "default_user.jpg";
+    }
+
 }

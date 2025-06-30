@@ -12,4 +12,8 @@ public class BookCover extends Image {
     public BookCover(String fileName) {
         this.setFileName(fileName);
     }
+
+    public static String getDefaultFileName() {
+        return "default_cover.jpg";
+    }
 }

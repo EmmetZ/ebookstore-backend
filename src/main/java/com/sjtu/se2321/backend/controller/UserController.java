@@ -38,6 +38,7 @@ import com.sjtu.se2321.backend.dto.UserConsumptionData;
 import com.sjtu.se2321.backend.dto.UserDTO;
 import com.sjtu.se2321.backend.dto.UserReqParam;
 import com.sjtu.se2321.backend.dto.UserStatusBody;
+import com.sjtu.se2321.backend.entity.Avatar;
 import com.sjtu.se2321.backend.entity.Image;
 import com.sjtu.se2321.backend.entity.User;
 import com.sjtu.se2321.backend.service.ImageService;
@@ -101,7 +102,8 @@ public class UserController {
             imageService.save(avatar);
 
             // delete previous avatar image file
-            if (preAvatar != null) {
+            // don't delete the default avatar file
+            if (preAvatar != null && preAvatar != Avatar.getDefaultFileName()) {
                 Path prePath = uploadPath.resolve(preAvatar);
                 Files.deleteIfExists(prePath);
             }
